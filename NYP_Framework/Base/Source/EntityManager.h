@@ -19,6 +19,8 @@ public:
 	bool RemoveEntity(EntityBase* _existingEntity);
 	bool MarkForDeletion(EntityBase* _existingEntity);
 	void SetSpatialPartition(CSpatialPartition* theSpatialPartition);
+    //void CollideWithPlayer(CPlayerInfo* player);
+    bool isColliding;
 
 private:
 	EntityManager();

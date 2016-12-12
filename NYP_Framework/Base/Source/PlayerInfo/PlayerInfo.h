@@ -3,8 +3,9 @@
 #include "../FPSCamera.h"
 #include "../GroundEntity.h"
 #include "../WeaponInfo/WeaponInfo.h"
+#include "Collider/Collider.h"
 
-class CPlayerInfo
+class CPlayerInfo : public EntityBase, public CCollider
 {
 protected:
 	static CPlayerInfo *s_instance;
@@ -64,6 +65,14 @@ public:
 	void SetBoundary(Vector3 max, Vector3 min);
 	// Set the terrain for the player info
 	void SetTerrain(GroundEntity* m_pTerrain);
+    // set aabb
+    void SetAABB(Vector3 maxAABB, Vector3 minAABB);
+    // set player barricade/blockade boundary
+    // Ideally, go through list of player-bumpable objects, lessened using spatial-partioning then check for collision
+    bool CollisionCourse(Vector3 pos, Vector3 scale); // the parameters will become invalid later when the list is made
+    bool CollisionCourseBack(Vector3 pos, Vector3 scale); // the parameters will become invalid later when the list is made
+    bool CollisionCourseSide(Vector3 pos, Vector3 scale); // the parameters will become invalid later when the list is made
+    void CollideFront(Vector3 pos, Vector3 scale);
 
 	// Get position
 	Vector3 GetPos(void) const;
@@ -100,6 +109,7 @@ private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 position, target, up;
 	Vector3 maxBoundary, minBoundary;
+    Vector3 pos, scale;
 	GroundEntity* m_pTerrain;
 
 	double m_dSpeed;

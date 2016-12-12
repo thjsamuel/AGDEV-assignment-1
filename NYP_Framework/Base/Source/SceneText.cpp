@@ -158,6 +158,7 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateRay("laser", 10.f);
 	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f);
     MeshBuilder::GetInstance()->GenerateSphere("Bullet", Color(1.0f, 1.0f, 0.0f), 10, 15, 0.1f);
+    MeshBuilder::GetInstance()->GenerateCube("blockade", Color(1.0f, 1.0f, 0.0f), 1.0f);
 
 	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
@@ -196,6 +197,7 @@ void SceneText::Init()
 	GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
 	CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
 	grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
+    
     theEnemy = new CEnemy[10];
     //for (int i = 0; i < 10; ++i)
     {
@@ -214,6 +216,10 @@ void SceneText::Init()
 	groundEntity->SetScale(Vector3(100.0f, 100.0f, 100.0f));
 	groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
 	playerInfo->SetTerrain(groundEntity);
+    GenericEntity* blockade = Create::Entity("blockade", Vector3(0, 0.0f, -200.0f), Vector3(100, 50.0f, 30.0f));
+    blockade->SetCollider(true);
+    blockade->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+    blockade->InitLOD("cube", "cubeSG", "cubeSG");
     //for (int i = 0; i < 10; ++i)
     {
         //theEnemy[i].SetTerrain(groundEntity);
@@ -235,7 +241,9 @@ void SceneText::Update(double dt)
 {
 	// Update our entities
 	EntityManager::GetInstance()->Update(dt);
-
+    Vector3 objPos = Vector3(0, 0.0f, -200.0f);
+    Vector3 objSca = Vector3(100, 50.0f, 30.0f);
+    playerInfo->CollideFront(objPos, objSca);
 	// THIS WHOLE CHUNK TILL <THERE> CAN REMOVE INTO ENTITIES LOGIC! Or maybe into a scene function to keep the update clean
 	if(KeyboardController::GetInstance()->IsKeyDown('1'))
 		glEnable(GL_CULL_FACE);

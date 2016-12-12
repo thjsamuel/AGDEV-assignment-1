@@ -9,6 +9,7 @@
 #include "../WeaponInfo/LaserBlaster.h"
 #include "../WeaponInfo/GrenadeThrow.h"
 #include "../MachineGun.h"
+#include "../EntityManager.h"
 
 // Allocating and initializing CPlayerInfo's static data member.  
 // The pointer is allocated but not the object's constructor.
@@ -63,12 +64,20 @@ void CPlayerInfo::Init(void)
 	maxBoundary.Set(1,1,1);
 	minBoundary.Set(-1, -1, -1);
 
+    pos.Set(1, 1, 1);
+    scale.Set(-1, -1, -1);
+
+    this->SetCollider(true);
+    this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
+
 	// Set the pistol as the primary weapon
 	primaryWeapon = new CMachineGun();
 	primaryWeapon->Init();
 
 	secondaryWeapon = new CGrenadeThrow();
 	secondaryWeapon->Init();
+
+    //EntityManager::GetInstance()->AddEntity(this, true);
 }
 
 // Returns true if the player is on ground
@@ -157,6 +166,12 @@ void CPlayerInfo::SetBoundary(Vector3 max, Vector3 min)
 	minBoundary = min;
 }
 
+void CPlayerInfo::SetAABB(Vector3 maxAABB, Vector3 minAABB)
+{
+    this->maxAABB = maxAABB;
+    this->minAABB = minAABB;
+}
+
 // Set the terrain for the player info
 void CPlayerInfo::SetTerrain(GroundEntity* m_pTerrain)
 {
@@ -166,6 +181,38 @@ void CPlayerInfo::SetTerrain(GroundEntity* m_pTerrain)
 
 		SetBoundary(this->m_pTerrain->GetMaxBoundary(), this->m_pTerrain->GetMinBoundary());
 	}
+}
+
+bool CPlayerInfo::CollisionCourse(Vector3 pos, Vector3 scale)
+{
+    bool xCheck, zCheck;
+    xCheck = (/**/position.x > (pos.x - (scale.x / 2))/**/) && (/**/position.x < (pos.x + (scale.x / 2))/**/);
+    //zCheck = (position.z - 1.0f) < (pos.z + (scale.z / 2) );
+    zCheck = (/*(position.z + 1.0f) > (pos.z - (scale.z / 2))*/(position.z + 1.0f) > pos.z) && (/**/(position.z - 1.0f) < (pos.z + (scale.z / 2))/**/);
+    if (xCheck && zCheck)
+        return true;
+    return false;
+}
+
+bool CPlayerInfo::CollisionCourseBack(Vector3 pos, Vector3 scale)
+{
+    bool xCheck, zCheck;
+    xCheck = (/**/position.x > (pos.x - (scale.x / 2))/**/) && (/**/position.x < (pos.x + (scale.x / 2))/**/);
+    //zCheck = (position.z - 1.0f) < (pos.z + (scale.z / 2) );
+    zCheck = (/*(position.z + 1.0f) > (pos.z - (scale.z / 2))*/(position.z + 1.0f) < pos.z) && (/**/(position.z - 1.0f) < (pos.z - (scale.z / 2))/**/);
+    if (xCheck && zCheck)
+        return true;
+    return false;
+}
+
+bool CPlayerInfo::CollisionCourseSide(Vector3 pos, Vector3 scale)
+{
+    bool xCheck, zCheck;
+    xCheck = (/**/(position.x + 1.0f) > (pos.x - (scale.x / 2))/**/) && (/**/(position.x - 1.0f) < (pos.x + (scale.x / 2))/**/);
+    zCheck = (/**/(position.z + 1.0f) > (pos.z - (scale.z / 2))/**/) && (/**/(position.z - 1.0f) < (pos.z + (scale.z / 2))/**/);
+    if (xCheck && zCheck)
+        return true;
+    return false;
 }
 
 // Stop the player's movement
@@ -314,8 +361,7 @@ void CPlayerInfo::Update(double dt)
 			rightUV.Normalize();
 			position += rightUV * (float)m_dSpeed * (float)dt;
 		}
-		// Constrain the position
-		Constrain();
+        Constrain();
 		// Update the target
 		target = position + viewVector;
 	}
@@ -384,7 +430,7 @@ void CPlayerInfo::Update(double dt)
 		Vector3 rightUV;
 
 		{
-			float yaw = (-lookSpeed * camera_yaw * (float)dt);
+			float yaw = (float)(-lookSpeed * camera_yaw * (float)dt);
 			Mtx44 rotation;
 			rotation.SetToRotation(yaw, 0, 1, 0);
 			viewUV = rotation * viewUV;
@@ -395,7 +441,7 @@ void CPlayerInfo::Update(double dt)
 			up = rightUV.Cross(viewUV).Normalized();
 		}
 		{
-			float pitch = (-lookSpeed * camera_pitch * (float)dt);
+			float pitch = (float)(-lookSpeed * camera_pitch * (float)dt);
 			rightUV = viewUV.Cross(up);
 			rightUV.y = 0;
 			rightUV.Normalize();
@@ -485,6 +531,25 @@ void CPlayerInfo::Constrain(void)
 	if (position.z < minBoundary.z + 1.0f)
 		position.z = minBoundary.z + 1.0f;
 
+    if (CollisionCourse(pos, scale))
+    {
+        if (position.z - 1 < pos.z + (scale.z * 0.5))
+            position.z = (float)(pos.z + (scale.z * 0.5)) + 1;
+
+    }
+    else if (CollisionCourseBack(pos, scale))
+    {
+        if (position.z + 1 > pos.z - (scale.z * 0.5))
+            position.z = (float)(pos.z - (scale.z * 0.5)) - 1;
+    }
+    else if (CollisionCourseSide(pos, scale))
+    {
+        if (position.x + 1 > pos.x - (scale.x * 0.5) && position.x + 1 < pos.x)
+            position.x = (float)(pos.x - (scale.x * 0.5)) - 1;
+        if (position.x - 1 < pos.x + (scale.x * 0.5) && position.x - 1 > pos.x)
+            position.x = (float)(pos.x + (scale.x * 0.5)) + 1;
+    }
+
 	// if the player is not jumping nor falling, then adjust his y position
 	if ((m_bJumpUpwards == false) && (m_bFallDownwards == false))
 	{
@@ -493,6 +558,33 @@ void CPlayerInfo::Constrain(void)
 		if (position.y != m_pTerrain->GetTerrainHeight(position))
 			position.y = m_pTerrain->GetTerrainHeight(position);
 	}
+}
+
+void CPlayerInfo::CollideFront(Vector3 pos, Vector3 scale)
+{
+    //if (dir == 0) // front
+    //{
+    //    maxBoundary = Vector3(pos.x + scale.x, pos.y + scale.y, pos.z + scale.z);
+    //    minBoundary = Vector3(pos.x - scale.x, pos.y - scale.y, pos.z - scale.z);
+    //    minBoundary.z = pos.z + scale.z / 2
+    //}
+    //else // back
+    //{
+    //    maxBoundary = Vector3(pos.x - (scale.x * 0.5), pos.y - (scale.y * 0.5), pos.z - (scale.z * 0.5));
+    //    minBoundary = Vector3(pos.x + (scale.x * 0.5), pos.y + (scale.y * 0.5), pos.z + (scale.z * 0.5));
+    //}
+
+    this->pos = pos;
+    this->scale = scale;
+
+    // if the player is not jumping nor falling, then adjust his y position
+    if ((m_bJumpUpwards == false) && (m_bFallDownwards == false))
+    {
+        // if the y position is not equal to terrain height at that position, 
+        // then update y position to the terrain height
+        if (position.y != m_pTerrain->GetTerrainHeight(position))
+            position.y = m_pTerrain->GetTerrainHeight(position);
+    }
 }
 
 void CPlayerInfo::AttachCamera(FPSCamera* _cameraPtr)

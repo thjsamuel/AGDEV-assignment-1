@@ -29,7 +29,6 @@ public:
 
 	virtual void SetIsLaser(const bool bLaser);
 	virtual bool GetIsLaser(void) const;
-
 protected:
 	Vector3 position;
 	Vector3 scale;
