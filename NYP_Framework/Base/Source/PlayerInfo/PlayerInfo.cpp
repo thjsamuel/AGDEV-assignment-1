@@ -9,6 +9,7 @@
 #include "../WeaponInfo/LaserBlaster.h"
 #include "../WeaponInfo/GrenadeThrow.h"
 #include "../MachineGun.h"
+#include "../WeaponInfo/Sniper.h"
 #include "../EntityManager.h"
 
 // Allocating and initializing CPlayerInfo's static data member.  
@@ -29,6 +30,7 @@ CPlayerInfo::CPlayerInfo(void)
 	, m_pTerrain(NULL)
 	, primaryWeapon(NULL)
 	, secondaryWeapon(NULL)
+    , playerWeapon(MAX_WEAPON)
 {
 }
 
@@ -71,7 +73,8 @@ void CPlayerInfo::Init(void)
     this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
 
 	// Set the pistol as the primary weapon
-	primaryWeapon = new CMachineGun();
+	primaryWeapon = new CSniper();
+    playerWeapon = SNIPERRIFLE;
 	primaryWeapon->Init();
 
 	secondaryWeapon = new CGrenadeThrow();
@@ -478,11 +481,17 @@ void CPlayerInfo::Update(double dt)
 	// if Mouse Buttons were activated, then act on them
     if (MouseController::GetInstance()->IsButtonPressed(MouseController::LMB) || MouseController::GetInstance()->IsButtonDown(MouseController::LMB))
 	{
-        if (primaryWeapon)
+        if (primaryWeapon && playerWeapon != SNIPERRIFLE)
         {
             primaryWeapon->Update(dt);
             primaryWeapon->Discharge(position, target, this);
             //target.y -= (sin(primaryWeapon->GetRecoil()) * dt);
+        }
+        else
+        {
+            if (primaryWeapon->GetCanFire())
+                primaryWeapon->SetElapsed(0.0);
+            primaryWeapon->Discharge(position, target, this);
         }
 	}
 	else if (MouseController::GetInstance()->IsButtonPressed(MouseController::RMB))
@@ -493,6 +502,13 @@ void CPlayerInfo::Update(double dt)
             secondaryWeapon->Discharge(position, target, this);
         }
 	}
+    if (MouseController::GetInstance()->IsButtonUp(MouseController::LMB))
+    {
+        if (primaryWeapon && playerWeapon == SNIPERRIFLE)
+        {
+            primaryWeapon->UpdateSniper(dt);
+        }
+    }
 
 	// If the user presses R key, then reset the view to default values
 	if (KeyboardController::GetInstance()->IsKeyDown('P'))

@@ -159,6 +159,8 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f);
     MeshBuilder::GetInstance()->GenerateSphere("Bullet", Color(1.0f, 1.0f, 0.0f), 10, 15, 0.1f);
     MeshBuilder::GetInstance()->GenerateCube("blockade", Color(1.0f, 1.0f, 0.0f), 1.0f);
+    MeshBuilder::GetInstance()->GenerateQuad("target", Color(1, 1, 1), 1.f);
+    MeshBuilder::GetInstance()->GetMesh("target")->textureID = LoadTGA("Image//Misc//target.tga");
 
 	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
@@ -188,6 +190,12 @@ void SceneText::Init()
 	{
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
 	}
+
+    target = Create::Entity("target", Vector3(-25.f, 0.0f, -120.0f));
+    target->SetCollider(true);
+    target->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+    target->InitLOD("target", "target", "cubeSG");
+    CSceneNode* targetInGrid = CSceneGraph::GetInstance()->GetInstance()->AddNode(target);
 
 	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
 	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
@@ -281,27 +289,34 @@ void SceneText::Update(double dt)
 		lights[0]->position.y += (float)(10.f * dt);
 
 	// if the left mouse button was released
-	if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
-	{
-		cout << "Left Mouse Button was released!" << endl;
-	}
-	if (MouseController::GetInstance()->IsButtonReleased(MouseController::RMB))
-	{
-		cout << "Right Mouse Button was released!" << endl;
-	}
-	if (MouseController::GetInstance()->IsButtonReleased(MouseController::MMB))
-	{
-		cout << "Middle Mouse Button was released!" << endl;
-	}
-	if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) != 0.0)
-	{
-		cout << "Mouse Wheel has offset in X-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) << endl;
-	}
-	if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) != 0.0)
-	{
-		cout << "Mouse Wheel has offset in Y-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) << endl;
-	}
+	//if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
+	//{
+	//	cout << "Left Mouse Button was released!" << endl;
+	//}
+	//if (MouseController::GetInstance()->IsButtonReleased(MouseController::RMB))
+	//{
+	//	cout << "Right Mouse Button was released!" << endl;
+	//}
+	//if (MouseController::GetInstance()->IsButtonReleased(MouseController::MMB))
+	//{
+	//	cout << "Middle Mouse Button was released!" << endl;
+	//}
+	//if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) != 0.0)
+	//{
+	//	cout << "Mouse Wheel has offset in X-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) << endl;
+	//}
+	//if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) != 0.0)
+	//{
+	//	cout << "Mouse Wheel has offset in Y-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) << endl;
+	//}
 	// <THERE>
+
+    vector<EntityBase*> list = CSpatialPartition::GetInstance()->GetObjects(playerInfo->GetPos(), 1.0f);
+    for (int i = 0; i < list.size(); ++i)
+    {
+        if (CSceneGraph::GetInstance()->DeleteNode(list[i]) == true)
+            break;
+    }
 
 	// Update the player position and other details based on keyboard and mouse inputs
 	playerInfo->Update(dt);

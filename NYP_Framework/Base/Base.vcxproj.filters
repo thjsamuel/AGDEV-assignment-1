@@ -120,6 +120,9 @@
     <ClCompile Include="Source\MachineGun.cpp">
       <Filter>WeaponInfo</Filter>
     </ClCompile>
+    <ClCompile Include="Source\WeaponInfo\Sniper.cpp">
+      <Filter>WeaponInfo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -204,6 +207,9 @@
       <Filter>Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Source\MachineGun.h">
+      <Filter>WeaponInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WeaponInfo\Sniper.h">
       <Filter>WeaponInfo</Filter>
     </ClInclude>
   </ItemGroup>

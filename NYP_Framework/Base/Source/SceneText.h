@@ -36,7 +36,7 @@ private:
 	TextEntity* textObj[3];
 	Light* lights[2];
 
-	GenericEntity* theCube;
+    GenericEntity* target;
     CEnemy* theEnemy;
 
 

@@ -30,6 +30,15 @@ public:
 	}
 	~CPlayerInfo(void);
 
+    enum WEAPONS
+    {
+        PISTOL,
+        MACHINEGUN,
+        GRENADE,
+        SNIPERRIFLE,
+        MAX_WEAPON
+    };
+
 	// Initialise this class instance
 	void Init(void);
 	// Returns true if the player is on ground
@@ -128,4 +137,5 @@ private:
 
 	CWeaponInfo* primaryWeapon;
 	CWeaponInfo* secondaryWeapon;
+    WEAPONS playerWeapon;
 };

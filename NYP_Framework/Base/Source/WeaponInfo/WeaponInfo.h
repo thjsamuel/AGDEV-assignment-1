@@ -64,11 +64,16 @@ public:
 	virtual int GetFiringRate(void) const;
 	// Get the firing flag
 	virtual bool GetCanFire(void) const;
+    // Set elapsed time
+    void CWeaponInfo::SetElapsed(const float elapsed);
+    // Get elapsed time
+    float CWeaponInfo::GetElapsed(void) const;
 
 	// Initialise this instance to default values
 	virtual void Init(void);
 	// Update the elapsed time
 	void Update(const double dt);
+    void UpdateSniper(const double dt);
 	// Discharge this weapon
 	virtual void Discharge(Vector3 position, Vector3 target, CPlayerInfo* _source = NULL);
 	// Reload this weapon

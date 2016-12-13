@@ -39,6 +39,7 @@
     <ClCompile Include="Source\Transform.cpp" />
     <ClCompile Include="Source\UpdateTransform.cpp" />
     <ClCompile Include="Source\WeaponInfo\Pistol.cpp" />
+    <ClCompile Include="Source\WeaponInfo\Sniper.cpp" />
     <ClCompile Include="Source\WeaponInfo\WeaponInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +70,7 @@
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\UpdateTransform.h" />
     <ClInclude Include="Source\WeaponInfo\Pistol.h" />
+    <ClInclude Include="Source\WeaponInfo\Sniper.h" />
     <ClInclude Include="Source\WeaponInfo\WeaponInfo.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

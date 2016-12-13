@@ -107,6 +107,16 @@ int CWeaponInfo::GetFiringRate(void) const
 	return (int)(60.0 / timeBetweenShots);	// 60 seconds divided by timeBetweenShots
 }
 
+void CWeaponInfo::SetElapsed(const float elapsed)
+{
+    this->elapsedTime = elapsed;
+}
+
+float CWeaponInfo::GetElapsed(void) const
+{
+    return elapsedTime;
+}
+
 // Get the firing flag
 bool CWeaponInfo::GetCanFire(void) const
 {
@@ -146,6 +156,15 @@ void CWeaponInfo::Update(const double dt)
 		bFire = true;
 		elapsedTime = 0.0;
 	}
+}
+
+void CWeaponInfo::UpdateSniper(const double dt)
+{
+    elapsedTime += dt;
+    if (elapsedTime > timeBetweenShots)
+    {
+        bFire = true;
+    }
 }
 
 // Discharge this weapon
