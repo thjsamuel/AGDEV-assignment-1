@@ -1,26 +1,2 @@
-﻿  Win32Input.cpp
-  Vector3.cpp
-  Vector2.cpp
-  Utility.cpp
-  timer.cpp
-  ShaderProgram.cpp
-  SceneManager.cpp
-  RenderHelper.cpp
-  Mtx44.cpp
-  MouseController.cpp
-  MeshBuilder.cpp
-  Mesh.cpp
-  MatrixStack.cpp
-  MathUtility.cpp
-  LoadTGA.cpp
-  LoadOBJ.cpp
-  LightBase.cpp
-  KeyboardController.cpp
-  GraphicsManager.cpp
-  EntityBase.cpp
-  Generating Code...
-  Compiling...
-  Collider.cpp
-  CameraBase.cpp
-  Generating Code...
+﻿  EntityBase.cpp
   Common.vcxproj -> E:\BlackboardLocal\Year 2\Sem2\Advanced Game Development Techniques\Assignment 1\NYP_Framework\Debug\Common.lib

@@ -21,7 +21,6 @@ public:
 	void SetSpatialPartition(CSpatialPartition* theSpatialPartition);
     //void CollideWithPlayer(CPlayerInfo* player);
     bool isColliding;
-
 private:
 	EntityManager();
 	virtual ~EntityManager();
@@ -38,7 +37,6 @@ private:
 	// Check if any Collider is colliding with another Collider
 	bool CheckForCollision(void);
 	CSpatialPartition* theSpatialPartition;
-
 	std::list<EntityBase*> entityList;
 };
 

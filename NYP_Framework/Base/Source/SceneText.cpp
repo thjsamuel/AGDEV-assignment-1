@@ -191,10 +191,12 @@ void SceneText::Init()
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
 	}
 
+    //vector<GenericEntity*> target
     target = Create::Entity("target", Vector3(-25.f, 0.0f, -120.0f));
     target->SetCollider(true);
     target->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
     target->InitLOD("target", "target", "cubeSG");
+    target->isTarget = true;
     CSceneNode* targetInGrid = CSceneGraph::GetInstance()->GetInstance()->AddNode(target);
 
 	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
@@ -310,12 +312,15 @@ void SceneText::Update(double dt)
 	//	cout << "Mouse Wheel has offset in Y-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) << endl;
 	//}
 	// <THERE>
-
+     
+    // to add to child, just replaace playerinfo with target.pos
     vector<EntityBase*> list = CSpatialPartition::GetInstance()->GetObjects(playerInfo->GetPos(), 1.0f);
     for (int i = 0; i < list.size(); ++i)
     {
-        if (CSceneGraph::GetInstance()->DeleteNode(list[i]) == true)
-            break;
+        if (list[i]->isTarget)
+            CSceneGraph::GetInstance()->DeleteNode(list[i]);
+        
+            
     }
 
 	// Update the player position and other details based on keyboard and mouse inputs
