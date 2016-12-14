@@ -1,9 +1,8 @@
-﻿Build started 12/14/2016 9:02:10 PM.
+﻿Build started 12/14/2016 11:14:13 PM.
      1>Project "C:\Users\150678G\Documents\AGDEV-assignment-1\NYP_Framework\Common\Common.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\150678G\Documents\AGDEV-assignment-1\NYP_Framework\/glew/include" /I"C:\Users\150678G\Documents\AGDEV-assignment-1\NYP_Framework\/glfw/include" /ZI /nologo /W3 /WX- /Od /Oy- /D _VARIADIC_MAX=10 /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\EntityBase.cpp
          EntityBase.cpp
-     1>cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
        Lib:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\150678G\Documents\AGDEV-assignment-1\NYP_Framework\Debug\Common.lib" /NOLOGO Debug\CameraBase.obj
          Debug\Collider.obj
@@ -32,4 +31,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.65
+Time Elapsed 00:00:00.72

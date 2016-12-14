@@ -74,11 +74,7 @@ void CPlayerInfo::Init(void)
 
 	// Set the pistol as the primary weapon
 	primaryWeapon = new CMachineGun();
-<<<<<<< HEAD
 	playerWeapon = MACHINEGUN;
-=======
-    playerWeapon = MACHINEGUN;
->>>>>>> 660765b2db1261dc75c28a1be01fd6ffc960ecb7
 	primaryWeapon->Init();
 
 	secondaryWeapon = new CLaserBlaster();

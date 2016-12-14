@@ -202,9 +202,8 @@ void SceneText::Init()
     target->SetAABB(Vector3(5.0f, 5.0f, 5.0f), Vector3(-5.0f, -5.0f, -5.0f));
     target->InitLOD("target", "sphere", "targetmedium");
     target->isTarget = true;
-<<<<<<< HEAD
 	target->SetScale(Vector3(10, 10, 10));
-    //CSceneNode* targetInGrid = CSceneGraph::GetInstance()->AddNode(target);
+ //   CSceneNode* targetInGrid = CSceneGraph::GetInstance()->AddNode(target);
 	//target->ApplyTranslate(0.0f, 0.0f, 0.f);
 
 	//aRotateMtx = new CUpdateTransformation();
@@ -230,8 +229,8 @@ void SceneText::Init()
 	//bRotateMtx->ApplyUpdate(1.0f, 0.0f, 1.0f, 0.0f);
 	//bRotateMtx->SetSteps(-120, 60);
 	//grandchildNode->SetUpdateTransformation(bRotateMtx);
-=======
-    CSceneNode* targetInGrid = CSceneGraph::GetInstance()->GetInstance()->AddNode(target);
+
+    //CSceneNode* targetInGrid = CSceneGraph::GetInstance()->GetInstance()->AddNode(target);
 
     timeBoard = Create::Entity("cubeSG", Vector3(50.f, 0.0f, -120.0f), Vector3(15, 5, 5));
     timeBoard->isText = true;
@@ -248,7 +247,6 @@ void SceneText::Init()
 	GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
 	CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
 	grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
->>>>>>> 660765b2db1261dc75c28a1be01fd6ffc960ecb7
     
     theEnemy = new CEnemy[10];
     //for (int i = 0; i < 10; ++i)
@@ -296,12 +294,12 @@ void SceneText::TargetUpdate(double dt)
 	vector<EntityBase*> list = CSpatialPartition::GetInstance()->GetObjects(playerInfo->GetPos(), 1.0f);
 	for (int i = 0; i < list.size(); ++i)
 	{
-		if (list.size() > 1 && list[i]->isTarget)
+		//if (/*list.size() > 1&&*/ list[i]->isTarget)
 		{
-			targetY += (5 * dt);
+			targetY += (10 * dt);
 			if (targetY > 5)
 				targetY = 5;
-			list[i]->SetPosition(Vector3(list[i]->GetPosition().x, targetY, list[i]->GetPosition().z));
+			//list[i]->SetPosition(Vector3(list[i]->GetPosition().x, targetY, list[i]->GetPosition().z));
 			
 			//aRotateMtx->rotateUp = true;
 		}
@@ -391,22 +389,18 @@ void SceneText::Update(double dt)
 
     timer->Update(dt, 5);
      
-<<<<<<< HEAD
-    
-=======
     // to add to child, just replace playerinfo with target.pos
     vector<EntityBase*> list = CSpatialPartition::GetInstance()->GetObjects(playerInfo->GetPos(), 1.0f);
     for (int i = 0; i < list.size(); ++i)
     {
-        if (list[i]->isTarget)
-            CSceneGraph::GetInstance()->DeleteNode(list[i]);
-        else if (list[i]->isText)
+        //if (list[i]->isTarget)
+          //  CSceneGraph::GetInstance()->DeleteNode(list[i]);
+        if (list[i]->isText)
         {
             //Timer* tempTimer = dynamic_cast<Timer*>(list[i]);
             timer->run = false;
         }
     }
->>>>>>> 660765b2db1261dc75c28a1be01fd6ffc960ecb7
 
 	// Update the player position and other details based on keyboard and mouse inputs
 	playerInfo->Update(dt);
@@ -430,7 +424,6 @@ void SceneText::Update(double dt)
 	ss1 << "Player:" << playerInfo->GetPos();
 	textObj[2]->SetText(ss1.str());
 
-<<<<<<< HEAD
 	/*if (target->TargetActivated == false)
 		target->SetUpdateTransformation(aRotateMtx);
 
@@ -441,12 +434,10 @@ void SceneText::Update(double dt)
 
 	//cout << aRotateMtx->curSteps << endl;
 
-=======
     ss.str("");
     ss.precision(4);
     ss << "Time: " << timer->countdown;
     textObj[3]->SetText(ss.str());
->>>>>>> 660765b2db1261dc75c28a1be01fd6ffc960ecb7
 }
 
 void SceneText::Render()

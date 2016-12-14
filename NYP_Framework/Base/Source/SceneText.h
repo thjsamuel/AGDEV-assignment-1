@@ -10,13 +10,10 @@
 #include "MatrixStack.h"
 #include "GenericEntity.h"
 #include "Enemy.h"
-<<<<<<< HEAD
 #include "UpdateTransform.h"
 
 
-=======
 #include "Timer\Timer.h"
->>>>>>> 660765b2db1261dc75c28a1be01fd6ffc960ecb7
 
 class ShaderProgram;
 class SceneManager;
@@ -45,14 +42,10 @@ private:
 	TextEntity* textObj[4];
 	Light* lights[2];
 
-<<<<<<< HEAD
 	//vector<GenericEntity*> target;
 	GenericEntity* target;
-=======
-    GenericEntity* target;
     GenericEntity* timeBoard;
     Timer* timer;
->>>>>>> 660765b2db1261dc75c28a1be01fd6ffc960ecb7
     CEnemy* theEnemy;
 	CUpdateTransformation* aRotateMtx;
 	float targetY;

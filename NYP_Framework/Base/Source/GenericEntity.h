@@ -5,11 +5,8 @@
 #include <string>
 #include "Collider/Collider.h"
 #include "LevelOfDetails.h"
-<<<<<<< HEAD
 #include "Transform.h"
-=======
 //#include "GameEntityType.h"
->>>>>>> 660765b2db1261dc75c28a1be01fd6ffc960ecb7
 
 class Mesh;
 
