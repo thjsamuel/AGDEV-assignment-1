@@ -3,7 +3,7 @@
 class CUpdateTransformation
 {
 protected:
-	int curSteps, deltaSteps, minSteps, maxSteps;
+	int deltaSteps, minSteps, maxSteps;
 	Mtx44 Update_Mtx, Update_Mtx_REVERSED;
 public:
 	CUpdateTransformation();
@@ -21,8 +21,15 @@ public:
 	void SetSteps(const int minSteps, const int maxSteps);
 	// Get the minSteps and maxSteps
 	void GetSteps(int& minSteps, int& maxSteps);
+	// Get the minSteps
+	int& GetminSteps();
+	// Get the maxSteps
+	int& GetmaxSteps();
 	// Get the direction of update
 	bool GetDirection(void) const;
 	// Get the Update_Mtx
 	Mtx44 GetUpdateTransformation(void);
-};
+	int curSteps;
+	bool rotateUp;
+	bool rotateDown;
+};

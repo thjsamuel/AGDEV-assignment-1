@@ -22,6 +22,7 @@
 #include "SkyBox/SkyBoxEntity.h"
 #include "SceneGraph.h"
 
+
 #include <iostream>
 using namespace std;
 
@@ -157,10 +158,11 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GetMesh("SKYBOX_BOTTOM")->textureID = LoadTGA("Image//SkyBox//skybox_bottom.tga");
 	MeshBuilder::GetInstance()->GenerateRay("laser", 10.f);
 	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f);
-    MeshBuilder::GetInstance()->GenerateSphere("Bullet", Color(1.0f, 1.0f, 0.0f), 10, 15, 0.1f);
+    MeshBuilder::GetInstance()->GenerateSphere("Bullet", Color(1.0f, 0.0f, 0.0f), 10, 15, 0.1f);
     MeshBuilder::GetInstance()->GenerateCube("blockade", Color(1.0f, 1.0f, 0.0f), 1.0f);
     MeshBuilder::GetInstance()->GenerateQuad("target", Color(1, 1, 1), 1.f);
     MeshBuilder::GetInstance()->GetMesh("target")->textureID = LoadTGA("Image//Misc//target.tga");
+	MeshBuilder::GetInstance()->GenerateCube("targetmedium", Color(1.0f, 0.0f, 0.0f), 4.0f);
 
 	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
@@ -191,22 +193,39 @@ void SceneText::Init()
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
 	}
 
-    //vector<GenericEntity*> target
-    target = Create::Entity("target", Vector3(-25.f, 0.0f, -120.0f));
+	targetY = -15.f;
+    target = Create::Entity("target", Vector3(20.f, targetY, -80.0f));
     target->SetCollider(true);
-    target->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-    target->InitLOD("target", "target", "cubeSG");
+    target->SetAABB(Vector3(5.0f, 5.0f, 5.0f), Vector3(-5.0f, -5.0f, -5.0f));
+    target->InitLOD("target", "sphere", "targetmedium");
     target->isTarget = true;
-    CSceneNode* targetInGrid = CSceneGraph::GetInstance()->GetInstance()->AddNode(target);
+	target->SetScale(Vector3(10, 10, 10));
+    //CSceneNode* targetInGrid = CSceneGraph::GetInstance()->AddNode(target);
+	//target->ApplyTranslate(0.0f, 0.0f, 0.f);
 
-	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
-	GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* childNode = baseNode->AddChild(childCube);
-	childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
-	GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
-	grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
+	//aRotateMtx = new CUpdateTransformation();
+	//aRotateMtx->ApplyUpdate(1.0f, 1.0f, 0.0f, 0.0f);
+	//aRotateMtx->SetSteps(-90, 10);
+	//target->SetUpdateTransformation(aRotateMtx);
+	//aRotateMtx->rotateDown = true;
+	
+	
+
+	//GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
+
+	//GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* childNode = baseNode->AddChild(childCube);
+	//childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
+
+	//GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
+	//grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
+
+	//CUpdateTransformation* bRotateMtx = new CUpdateTransformation();
+	//bRotateMtx->ApplyUpdate(1.0f, 0.0f, 1.0f, 0.0f);
+	//bRotateMtx->SetSteps(-120, 60);
+	//grandchildNode->SetUpdateTransformation(bRotateMtx);
     
     theEnemy = new CEnemy[10];
     //for (int i = 0; i < 10; ++i)
@@ -247,6 +266,29 @@ void SceneText::Init()
 	textObj[0]->SetText("HELLO WORLD");
 }
 
+void SceneText::TargetUpdate(double dt)
+{
+	// to add to child, just replaace playerinfo with target.pos
+	vector<EntityBase*> list = CSpatialPartition::GetInstance()->GetObjects(playerInfo->GetPos(), 1.0f);
+	for (int i = 0; i < list.size(); ++i)
+	{
+		if (list.size() > 1 && list[i]->isTarget)
+		{
+			targetY += (5 * dt);
+			if (targetY > 5)
+				targetY = 5;
+			list[i]->SetPosition(Vector3(list[i]->GetPosition().x, targetY, list[i]->GetPosition().z));
+			
+			//aRotateMtx->rotateUp = true;
+		}
+		
+		//cout << "Target found!" << endl;
+		//CSceneGraph::GetInstance()->DeleteNode(list[i]);
+
+
+	}
+}
+
 void SceneText::Update(double dt)
 {
 	// Update our entities
@@ -277,6 +319,15 @@ void SceneText::Update(double dt)
 		lights[0]->type = Light::LIGHT_SPOT;
 	}
 
+	if (KeyboardController::GetInstance()->IsKeyDown('8'))
+	{
+		aRotateMtx->rotateUp = true;
+	}
+	else if (KeyboardController::GetInstance()->IsKeyDown('9'))
+	{
+		aRotateMtx->rotateDown = true;
+	}
+
 	if(KeyboardController::GetInstance()->IsKeyDown('I'))
 		lights[0]->position.z -= (float)(10.f * dt);
 	if(KeyboardController::GetInstance()->IsKeyDown('K'))
@@ -289,6 +340,7 @@ void SceneText::Update(double dt)
 		lights[0]->position.y -= (float)(10.f * dt);
 	if(KeyboardController::GetInstance()->IsKeyDown('P'))
 		lights[0]->position.y += (float)(10.f * dt);
+
 
 	// if the left mouse button was released
 	//if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
@@ -313,19 +365,12 @@ void SceneText::Update(double dt)
 	//}
 	// <THERE>
      
-    // to add to child, just replaace playerinfo with target.pos
-    vector<EntityBase*> list = CSpatialPartition::GetInstance()->GetObjects(playerInfo->GetPos(), 1.0f);
-    for (int i = 0; i < list.size(); ++i)
-    {
-        if (list[i]->isTarget)
-            CSceneGraph::GetInstance()->DeleteNode(list[i]);
-        
-            
-    }
+    
 
 	// Update the player position and other details based on keyboard and mouse inputs
 	playerInfo->Update(dt);
     //theEnemy->Update(dt);
+	TargetUpdate(dt);
 
 	//camera.Update(dt); // Can put the camera into an entity rather than here (Then we don't have to write this)
 
@@ -343,6 +388,17 @@ void SceneText::Update(double dt)
 	ss1.precision(4);
 	ss1 << "Player:" << playerInfo->GetPos();
 	textObj[2]->SetText(ss1.str());
+
+	/*if (target->TargetActivated == false)
+		target->SetUpdateTransformation(aRotateMtx);
+
+	if (aRotateMtx->curSteps >= 0)
+		target->TargetActivated = true;*/
+	//aRotateMtx->Update();
+	
+
+	//cout << aRotateMtx->curSteps << endl;
+
 }
 
 void SceneText::Render()

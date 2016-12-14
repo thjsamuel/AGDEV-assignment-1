@@ -73,8 +73,8 @@ void CPlayerInfo::Init(void)
     this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
 
 	// Set the pistol as the primary weapon
-	primaryWeapon = new CSniper();
-    playerWeapon = SNIPERRIFLE;
+	primaryWeapon = new CMachineGun();
+	playerWeapon = MACHINEGUN;
 	primaryWeapon->Init();
 
 	secondaryWeapon = new CGrenadeThrow();

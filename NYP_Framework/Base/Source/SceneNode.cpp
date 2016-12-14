@@ -347,6 +347,11 @@ void CSceneNode::Update(void)
 	for (it = theChildren.begin(); it != theChildren.end(); ++it)
 	{
 		(*it)->Update();
+	} 
+
+	if (theUpdateTransformation)
+	{
+		ApplyTransform(GetUpdateTransform());
 	}
 }
 // Render the Scene Graph

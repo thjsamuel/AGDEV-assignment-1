@@ -7,6 +7,7 @@ EntityBase::EntityBase()
 	, m_bCollider(false)
 	, bLaser(false)
     , isTarget(false)
+	, TargetActivated(false)
 {
 }
 

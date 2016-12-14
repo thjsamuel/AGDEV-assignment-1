@@ -10,6 +10,9 @@
 #include "MatrixStack.h"
 #include "GenericEntity.h"
 #include "Enemy.h"
+#include "UpdateTransform.h"
+
+
 
 class ShaderProgram;
 class SceneManager;
@@ -26,6 +29,8 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
+	void TargetUpdate(double dt);
+
 private:
 	SceneText(SceneManager* _sceneMgr); // This is used to register to SceneManager
 
@@ -36,8 +41,11 @@ private:
 	TextEntity* textObj[3];
 	Light* lights[2];
 
-    GenericEntity* target;
+	//vector<GenericEntity*> target;
+	GenericEntity* target;
     CEnemy* theEnemy;
+	CUpdateTransformation* aRotateMtx;
+	float targetY;
 
 
 	static SceneText* sInstance; // The pointer to the object that gets registered

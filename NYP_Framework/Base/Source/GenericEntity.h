@@ -5,10 +5,11 @@
 #include <string>
 #include "Collider/Collider.h"
 #include "LevelOfDetails.h"
+#include "Transform.h"
 
 class Mesh;
 
-class GenericEntity : public EntityBase, public CCollider, public CLevelOfDetails
+class GenericEntity : public EntityBase, public CCollider, public CLevelOfDetails, public CTransform
 {
 public:
 	GenericEntity(Mesh* _modelMesh);

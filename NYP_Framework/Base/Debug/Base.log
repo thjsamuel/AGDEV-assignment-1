@@ -1,40 +1,9 @@
-﻿  SceneText.cpp
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\scenetext.cpp(316): warning C4018: '<' : signed/unsigned mismatch
-  Generating Code...
-  Compiling...
-  WeaponInfo.cpp
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\weaponinfo\weaponinfo.cpp(53): warning C4244: 'return' : conversion from 'const double' to 'float', possible loss of data
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\weaponinfo\weaponinfo.cpp(117): warning C4244: 'return' : conversion from 'const double' to 'float', possible loss of data
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\weaponinfo\weaponinfo.cpp(185): warning C4244: 'argument' : conversion from 'double' to 'const float', possible loss of data
-  TextEntity.cpp
-  SpriteEntity.cpp
-  SpatialPartition.cpp
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\spatialpartition.cpp(71): warning C4244: 'argument' : conversion from 'int' to 'const float', possible loss of data
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\spatialpartition.cpp(144): warning C4018: '<' : signed/unsigned mismatch
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\spatialpartition.cpp(168): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\spatialpartition.cpp(170): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-  SkyBoxEntity.cpp
-  SceneNode.cpp
-  SceneGraph.cpp
-  Projectile.cpp
-  Laser.cpp
-  PlayerInfo.cpp
-  LaserBlaster.cpp
-  GroundEntity.cpp
-  Grid.cpp
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\grid.cpp(41): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\grid.cpp(42): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\grid.cpp(121): warning C4018: '<' : signed/unsigned mismatch
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\grid.cpp(134): warning C4018: '<' : signed/unsigned mismatch
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\grid.cpp(173): warning C4018: '<' : signed/unsigned mismatch
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\grid.cpp(219): warning C4018: '<' : signed/unsigned mismatch
-  GrenadeThrow.cpp
-  Grenade.cpp
-  GenericEntity.cpp
-  EntityManager.cpp
-  Enemy.cpp
-  Application.cpp
-  Generating Code...
-Application.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  Base.vcxproj -> E:\BlackboardLocal\Year 2\Sem2\Advanced Game Development Techniques\Assignment 1\NYP_Framework\Debug\Base.exe
+﻿Build started 12/14/2016 11:03:28 PM.
+     1>Project "C:\Users\150678G\Documents\AGDEV-assignment-1\NYP_Framework\Base\Base.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         Base.vcxproj -> C:\Users\150678G\Documents\AGDEV-assignment-1\NYP_Framework\Debug\Base.exe
+     1>Done Building Project "C:\Users\150678G\Documents\AGDEV-assignment-1\NYP_Framework\Base\Base.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.06
