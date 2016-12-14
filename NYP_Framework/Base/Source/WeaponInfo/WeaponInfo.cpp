@@ -142,7 +142,7 @@ void CWeaponInfo::Init(void)
 	// Boolean flag to indicate if weapon can fire now
 	bFire = true;
 
-    muzzleSpeed /= 100; // cm/s
+    //muzzleSpeed /= 100; // cm/s
     weight /= 9.8; // To find mass, w = m x g, g is m/s^2
     recoilMomentum = weight * muzzleSpeed; // to find momentum p = mv
 }
@@ -177,11 +177,17 @@ void CWeaponInfo::Discharge(Vector3 position, Vector3 target, CPlayerInfo* _sour
 		{
 			// Create a projectile with a cube mesh. Its position and direction is same as the player.
 			// It will last for 3.0 seconds and travel at 500 units per second
+            //if (target.x < 0)
+            //{
+            //    target.x *= -1;
+            //}
+            //Vector3 temp(target.x, target.y, (target - position).z);
 			CProjectile* aProjectile = Create::Projectile("Bullet", 
 															position, 
-															(target - position).Normalized(), 
-															15.0f, 
+															target, 
+															10.0f,
 															muzzleSpeed,
+                                                            10,
 															_source);
 			aProjectile->SetCollider(true);
 			aProjectile->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));

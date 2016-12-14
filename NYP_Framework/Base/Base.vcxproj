@@ -36,6 +36,7 @@
     <ClCompile Include="Source\SpatialPartition.cpp" />
     <ClCompile Include="Source\SpriteEntity.cpp" />
     <ClCompile Include="Source\TextEntity.cpp" />
+    <ClCompile Include="Source\Timer\Timer.cpp" />
     <ClCompile Include="Source\Transform.cpp" />
     <ClCompile Include="Source\UpdateTransform.cpp" />
     <ClCompile Include="Source\WeaponInfo\Pistol.cpp" />
@@ -47,6 +48,7 @@
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\EntityManager.h" />
     <ClInclude Include="Source\FPSCamera.h" />
+    <ClInclude Include="Source\GameEntityType.h" />
     <ClInclude Include="Source\GenericEntity.h" />
     <ClInclude Include="Source\GrenadeThrow.h" />
     <ClInclude Include="Source\Grid.h" />
@@ -67,6 +69,7 @@
     <ClInclude Include="Source\SpatialPartition.h" />
     <ClInclude Include="Source\SpriteEntity.h" />
     <ClInclude Include="Source\TextEntity.h" />
+    <ClInclude Include="Source\Timer\Timer.h" />
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\UpdateTransform.h" />
     <ClInclude Include="Source\WeaponInfo\Pistol.h" />

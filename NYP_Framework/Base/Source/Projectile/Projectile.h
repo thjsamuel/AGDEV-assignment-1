@@ -37,6 +37,8 @@ public:
 	void SetSource(CPlayerInfo* _source);
 	// Get the source of the projectile
 	CPlayerInfo* GetSource(void) const;
+    void SetLength(const float m_fLength);
+    float GetLength(void) const;
 
 	// Update the status of this projectile
 	virtual void Update(double dt = 0.0333f);
@@ -59,6 +61,7 @@ protected:
 	Vector3 theDirection;
 	// The character which fired this projectile
 	CPlayerInfo* theSource;
+    float m_fLength;
 };
 
 namespace Create
@@ -68,6 +71,7 @@ namespace Create
 							const Vector3& _direction, 
 							const float m_fLifetime, 
 							const float m_fSpeed,
+                            const float m_fLength,
 							CPlayerInfo* _source=NULL);
 };
 

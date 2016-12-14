@@ -31,6 +31,9 @@
     <Filter Include="Enemy">
       <UniqueIdentifier>{3e92d1cf-4dcc-44f4-a372-2130eb87bef6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Timer">
+      <UniqueIdentifier>{d5177fe4-4e9f-46df-905b-d92f8558d20b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -123,6 +126,9 @@
     <ClCompile Include="Source\WeaponInfo\Sniper.cpp">
       <Filter>WeaponInfo</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Timer\Timer.cpp">
+      <Filter>Timer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -211,6 +217,12 @@
     </ClInclude>
     <ClInclude Include="Source\WeaponInfo\Sniper.h">
       <Filter>WeaponInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer\Timer.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameEntityType.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

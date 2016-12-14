@@ -73,6 +73,7 @@ TextEntity* Create::Text3DObject(const std::string& _meshName, const Vector3& _p
 	result->SetPosition(_position);
 	result->SetScale(_scale);
 	result->SetTextRenderMode(TextEntity::MODE_3D);
+    result->isText = true;
 	EntityManager::GetInstance()->AddEntity(result);
 	return result;
 }

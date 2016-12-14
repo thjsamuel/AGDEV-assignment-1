@@ -6,8 +6,13 @@ EntityBase::EntityBase()
 	, isDone(false)
 	, m_bCollider(false)
 	, bLaser(false)
+    , bCube(false)
     , isTarget(false)
+<<<<<<< HEAD
 	, TargetActivated(false)
+=======
+    , isText(false)
+>>>>>>> 660765b2db1261dc75c28a1be01fd6ffc960ecb7
 {
 }
 

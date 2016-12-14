@@ -4,7 +4,7 @@
 CMachineGun::CMachineGun()
 {
     weight = 3.82;
-    muzzleSpeed = 945;
+    muzzleSpeed = 100;
 }
 
 

@@ -31,7 +31,12 @@ public:
 	virtual bool GetIsLaser(void) const;
 
     bool isTarget;
+<<<<<<< HEAD
 	bool TargetActivated;
+=======
+    bool isText;
+    bool bCube;
+>>>>>>> 660765b2db1261dc75c28a1be01fd6ffc960ecb7
 protected:
 	Vector3 position;
 	Vector3 scale;

@@ -254,7 +254,7 @@ bool EntityManager::GetIntersection(const float fDst1, const float fDst2, Vector
 
 bool EntityManager::InBox(Vector3 Hit, Vector3 B1, Vector3 B2, const int Axis)
 {
-    if (Axis == 1 && Hit.z > B1.z && Hit.z > B2.z && Hit.y > B1.y && Hit.y < B2.y) return true;
+    if (Axis == 1 && Hit.z > B1.z && Hit.z < B2.z && Hit.y > B1.y && Hit.y < B2.y) return true;
     if (Axis == 2 && Hit.z > B1.z && Hit.z < B2.z && Hit.x > B1.x && Hit.x < B2.x) return true;
     if (Axis == 3 && Hit.x > B1.x && Hit.x < B2.x && Hit.y > B1.y && Hit.y < B2.y) return true;
     return false;
@@ -270,13 +270,13 @@ bool EntityManager::CheckLineSegmentPlane(Vector3 line_start, Vector3 line_end, 
 		(GetIntersection(line_start.z - minAABB.z, line_end.z - minAABB.z, line_start, line_end, Hit)
 		&& InBox(Hit, minAABB, maxAABB, 3))
 		||
-		(GetIntersection(line_start.x - minAABB.x, line_end.x - minAABB.x, line_start, line_end, Hit)
+		(GetIntersection(line_start.x - maxAABB.x, line_end.x - maxAABB.x, line_start, line_end, Hit)
 		&& InBox(Hit, minAABB, maxAABB, 1))
 		||
-		(GetIntersection(line_start.y - minAABB.y, line_end.y - minAABB.y, line_start, line_end, Hit)
+		(GetIntersection(line_start.y - maxAABB.y, line_end.y - maxAABB.y, line_start, line_end, Hit)
 		&& InBox(Hit, minAABB, maxAABB, 2))
 		||
-		(GetIntersection(line_start.z - minAABB.z, line_end.z - minAABB.z, line_start, line_end, Hit)
+		(GetIntersection(line_start.z - maxAABB.z, line_end.z - maxAABB.z, line_start, line_end, Hit)
 		&& InBox(Hit, minAABB, maxAABB, 3)))
 		return true;
 	return false;
@@ -293,12 +293,17 @@ bool EntityManager::CheckForCollision(void)
 
 	for (colliderThis = entityList.begin(); colliderThis != colliderThisEnd; ++colliderThis)
 	{
-		if ((*colliderThis)->GetIsLaser())
+        if ((*colliderThis)->GetIsLaser()/* || (*colliderThis)->bCube*/)
 		{
-			CLaser* thisEntity = dynamic_cast<CLaser*>(*colliderThis);
+            CProjectile* thisEntity;
+            if ((*colliderThis)->GetIsLaser())
+			    thisEntity = dynamic_cast<CLaser*>(*colliderThis);
+            else
+                thisEntity = dynamic_cast<CProjectile*>(*colliderThis);
 
 			colliderThatEnd = entityList.end();
             int counter = 0;
+            //std::list<EntityBase*>::iterator next = colliderThis++;
             for (colliderThat = entityList.begin(); colliderThat != colliderThatEnd; ++colliderThat)
             {
                 if (colliderThat == colliderThis)
@@ -310,10 +315,13 @@ bool EntityManager::CheckForCollision(void)
                     CCollider *thatCollider = dynamic_cast<CCollider*>(*colliderThat);
                     Vector3 thatMinAABB = (*colliderThat)->GetPosition() + thatCollider->GetMinAABB();
                     Vector3 thatMaxAABB = (*colliderThat)->GetPosition() + thatCollider->GetMaxAABB();
-                    if (CheckLineSegmentPlane(thisEntity->GetPosition(), thisEntity->GetDirection() * thisEntity->GetLength(), thatMinAABB, thatMaxAABB, hitPosition) == true)
+                    if (CheckLineSegmentPlane(thisEntity->GetPosition(), thisEntity->GetPosition() - thisEntity->GetDirection() * thisEntity->GetLength(), thatMinAABB, thatMaxAABB, hitPosition) == true)
                     {
                         (*colliderThis)->SetIsDone(true);
                         (*colliderThat)->SetIsDone(true);
+
+                        CSceneGraph::GetInstance()->DeleteNode((*colliderThis));
+                        CSceneGraph::GetInstance()->DeleteNode((*colliderThat));
                     }
                 }
             }
@@ -340,14 +348,32 @@ bool EntityManager::CheckForCollision(void)
 					{
 						if (CheckAABBCollision(thisEntity, thatEntity) == true)
 						{
-							thisEntity->SetIsDone(true);
-							thatEntity->SetIsDone(true);
+                                thisEntity->SetIsDone(true);
+                                thatEntity->SetIsDone(true);
 
-							if (CSceneGraph::GetInstance()->DeleteNode((*colliderThis)) == true)
-								cout << "*** This Entity removed ***" << endl;
-							if (CSceneGraph::GetInstance()->DeleteNode((*colliderThat)) == true)
-								cout << "*** That Entity removed ***" << endl;
+                                if (CSceneGraph::GetInstance()->DeleteNode((*colliderThis)) == true)
+                                    cout << "*** This Entity removed ***" << endl;
+                                if (CSceneGraph::GetInstance()->DeleteNode((*colliderThat)) == true)
+                                    cout << "*** That Entity removed ***" << endl;
 						}
+                        else
+                        {
+                            CProjectile* thatEntity = dynamic_cast<CProjectile*>(*colliderThat);
+                            if (thatEntity == NULL)
+                                continue;
+                            Vector3 hitPosition = Vector3(0, 0, 0);
+                            CCollider *thisCollider = dynamic_cast<CCollider*>(*colliderThis);
+                            Vector3 thisMinAABB = (*colliderThis)->GetPosition() + thisCollider->GetMinAABB();
+                            Vector3 thisMaxAABB = (*colliderThis)->GetPosition() + thisCollider->GetMaxAABB();
+                            if (CheckLineSegmentPlane(thatEntity->GetPosition(), thatEntity->GetPosition() - thatEntity->GetDirection() * 10, thisMinAABB, thisMaxAABB, hitPosition) == true)
+                            {
+                                (*colliderThis)->SetIsDone(true);
+                                (*colliderThat)->SetIsDone(true);
+
+                                CSceneGraph::GetInstance()->DeleteNode((*colliderThis));
+                                CSceneGraph::GetInstance()->DeleteNode((*colliderThat));
+                            }
+                        }
 					}
 				}
 			}

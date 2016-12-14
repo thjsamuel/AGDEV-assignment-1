@@ -12,6 +12,7 @@ CProjectile::CProjectile(void)
 	, m_fLifetime(-1.0f)
 	, m_fSpeed(10.0f)
 	, theSource(NULL)
+    , m_fLength(0.0)
 {
 }
 
@@ -22,6 +23,7 @@ CProjectile::CProjectile(Mesh* _modelMesh)
 	, m_fLifetime(-1)
 	, m_fSpeed(10.0f)
 	, theSource(NULL)
+    , m_fLength(0.0)
 {
 }
 
@@ -102,6 +104,18 @@ CPlayerInfo* CProjectile::GetSource(void) const
 	return theSource;
 }
 
+// Set the length of the laser
+void CProjectile::SetLength(const float m_fLength)
+{
+    this->m_fLength = m_fLength;
+}
+
+// Get the length of the laser
+float CProjectile::GetLength(void) const
+{
+    return m_fLength;
+}
+
 // Update the status of this projectile
 void CProjectile::Update(double dt)
 {
@@ -147,6 +161,7 @@ CProjectile* Create::Projectile(const std::string& _meshName,
 								const Vector3& _direction, 
 								const float m_fLifetime, 
 								const float m_fSpeed,
+                                const float m_fLength,
 								CPlayerInfo* _source)
 {
 	Mesh* modelMesh = MeshBuilder::GetInstance()->GetMesh(_meshName);
@@ -155,8 +170,10 @@ CProjectile* Create::Projectile(const std::string& _meshName,
 
 	CProjectile* result = new CProjectile(modelMesh);
 	result->Set(_position, _direction, m_fLifetime, m_fSpeed);
+    result->SetLength(m_fLength);
 	result->SetStatus(true);
 	result->SetCollider(true);
+    result->bCube = true;
 	result->SetSource(_source);
 	EntityManager::GetInstance()->AddEntity(result);
 

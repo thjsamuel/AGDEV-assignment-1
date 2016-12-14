@@ -11,7 +11,7 @@ using namespace std;
 
 CLaser::CLaser(void)
 	: CProjectile(NULL)
-	, m_fLength(0.0)
+
 	, angle_x(0.0)
 	, angle_y(0.0)
 	, angle_z(0.0)
@@ -20,7 +20,7 @@ CLaser::CLaser(void)
 
 CLaser::CLaser(Mesh* _modelMesh)
 	: CProjectile(_modelMesh)
-	, m_fLength(0.0)
+
 	, angle_x(0.0)
 	, angle_y(0.0)
 	, angle_z(0.0)
@@ -31,18 +31,6 @@ CLaser::~CLaser(void)
 {
 	modelMesh = NULL;
 	theSource = NULL;
-}
-
-// Set the length of the laser
-void CLaser::SetLength(const float m_fLength)
-{
-	this->m_fLength = m_fLength;
-}
-
-// Get the length of the laser
-float CLaser::GetLength(void) const
-{
-	return m_fLength;
 }
 
 // Update this laser
@@ -125,7 +113,7 @@ CLaser* Create::Laser(const std::string& _meshName,
 	Mesh* modelMesh = MeshBuilder::GetInstance()->GetMesh(_meshName);
 	if (modelMesh == nullptr)
 		return nullptr;
-
+    
 	CLaser* result = new CLaser(modelMesh);
 	result->Set(_position, _direction, m_fLifetime, m_fSpeed);
 	result->SetLength(m_fLength);
