@@ -31,6 +31,8 @@ public:
 	virtual bool GetIsLaser(void) const;
 
     bool isTarget;
+    bool isText;
+    bool bCube;
 protected:
 	Vector3 position;
 	Vector3 scale;

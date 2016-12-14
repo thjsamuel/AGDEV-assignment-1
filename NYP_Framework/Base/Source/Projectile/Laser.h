@@ -14,8 +14,6 @@ public:
 	CLaser(Mesh* _modelMesh);
 	~CLaser(void);
 public:
-	void SetLength(const float m_fLength);
-	float GetLength(void) const;
 	void CalculateAngles(void);
 
 	// Update the status of this projectile
@@ -23,7 +21,6 @@ public:
 	// Render this projectile
 	void Render(void);
 private:
-	float m_fLength;
 	float angle_x, angle_y, angle_z;
 };
 

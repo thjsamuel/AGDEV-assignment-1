@@ -5,6 +5,7 @@
 #include <string>
 #include "Collider/Collider.h"
 #include "LevelOfDetails.h"
+//#include "GameEntityType.h"
 
 class Mesh;
 
@@ -19,7 +20,7 @@ public:
 
 	// Set the maxAABB and minAABB
 	void SetAABB(Vector3 maxAABB, Vector3 minAABB);
-
+    //EntityType typeOfEntity;
 private:
 	Mesh* modelMesh;
 };

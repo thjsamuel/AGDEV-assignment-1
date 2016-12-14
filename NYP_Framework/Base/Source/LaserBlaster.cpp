@@ -31,8 +31,9 @@ void CLaserBlaster::Discharge(Vector3 position, Vector3 target, CPlayerInfo* _so
 		{
 			Vector3 _direction = (target - position).Normalized();
 			CLaser* aLaser = Create::Laser("laser", position, _direction, 10.0f, 2.0f, 100.0f, _source);
-			aLaser->SetCollider(true);
-			aLaser->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+			//aLaser->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+            aLaser->SetIsLaser(true);
+            aLaser->SetCollider(false);
 			bFire = false;
 			magRounds--;
 		}

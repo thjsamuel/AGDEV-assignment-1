@@ -10,6 +10,7 @@
 #include "MatrixStack.h"
 #include "GenericEntity.h"
 #include "Enemy.h"
+#include "Timer\Timer.h"
 
 class ShaderProgram;
 class SceneManager;
@@ -33,12 +34,13 @@ private:
 	CPlayerInfo* playerInfo;
 	GroundEntity* groundEntity;
 	FPSCamera camera;
-	TextEntity* textObj[3];
+	TextEntity* textObj[4];
 	Light* lights[2];
 
     GenericEntity* target;
+    GenericEntity* timeBoard;
+    Timer* timer;
     CEnemy* theEnemy;
-
 
 	static SceneText* sInstance; // The pointer to the object that gets registered
 };

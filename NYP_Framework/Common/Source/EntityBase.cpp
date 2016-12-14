@@ -6,7 +6,9 @@ EntityBase::EntityBase()
 	, isDone(false)
 	, m_bCollider(false)
 	, bLaser(false)
+    , bCube(false)
     , isTarget(false)
+    , isText(false)
 {
 }
 

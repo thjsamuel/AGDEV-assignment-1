@@ -129,6 +129,9 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateText("text", 16, 16);
 	MeshBuilder::GetInstance()->GetMesh("text")->textureID = LoadTGA("Image//calibri.tga");
 	MeshBuilder::GetInstance()->GetMesh("text")->material.kAmbient.Set(1, 0, 0);
+    MeshBuilder::GetInstance()->GenerateText("world text", 16, 16);
+    MeshBuilder::GetInstance()->GetMesh("world text")->textureID = LoadTGA("Image//calibri.tga");
+    MeshBuilder::GetInstance()->GetMesh("world text")->material.kAmbient.Set(1, 0, 0);
 	MeshBuilder::GetInstance()->GenerateOBJ("Chair", "OBJ//chair.obj");
 	MeshBuilder::GetInstance()->GetMesh("Chair")->textureID = LoadTGA("Image//chair.tga");
 	MeshBuilder::GetInstance()->GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
@@ -199,6 +202,13 @@ void SceneText::Init()
     target->isTarget = true;
     CSceneNode* targetInGrid = CSceneGraph::GetInstance()->GetInstance()->AddNode(target);
 
+    timeBoard = Create::Entity("cubeSG", Vector3(50.f, 0.0f, -120.0f), Vector3(15, 5, 5));
+    timeBoard->isText = true;
+    timeBoard->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+    timeBoard->InitLOD("cubeSG", "cubeSG", "cubeSG");
+
+    timer = new Timer(300.f);
+
 	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
 	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
 	GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
@@ -245,6 +255,7 @@ void SceneText::Init()
 		textObj[i] = Create::Text2DObject("text", Vector3(-halfWindowWidth, -halfWindowHeight + fontSize*i + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(0.0f,1.0f,0.0f));
 	}
 	textObj[0]->SetText("HELLO WORLD");
+    textObj[3] = Create::Text3DObject("world text", timeBoard->GetPosition(), "", Vector3(fontSize, fontSize, fontSize), Color(1, 0, 0));
 }
 
 void SceneText::Update(double dt)
@@ -312,15 +323,20 @@ void SceneText::Update(double dt)
 	//	cout << "Mouse Wheel has offset in Y-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) << endl;
 	//}
 	// <THERE>
+
+    timer->Update(dt, 5);
      
-    // to add to child, just replaace playerinfo with target.pos
+    // to add to child, just replace playerinfo with target.pos
     vector<EntityBase*> list = CSpatialPartition::GetInstance()->GetObjects(playerInfo->GetPos(), 1.0f);
     for (int i = 0; i < list.size(); ++i)
     {
         if (list[i]->isTarget)
             CSceneGraph::GetInstance()->DeleteNode(list[i]);
-        
-            
+        else if (list[i]->isText)
+        {
+            //Timer* tempTimer = dynamic_cast<Timer*>(list[i]);
+            timer->run = false;
+        }
     }
 
 	// Update the player position and other details based on keyboard and mouse inputs
@@ -343,6 +359,11 @@ void SceneText::Update(double dt)
 	ss1.precision(4);
 	ss1 << "Player:" << playerInfo->GetPos();
 	textObj[2]->SetText(ss1.str());
+
+    ss.str("");
+    ss.precision(4);
+    ss << "Time: " << timer->countdown;
+    textObj[3]->SetText(ss.str());
 }
 
 void SceneText::Render()
@@ -355,7 +376,6 @@ void SceneText::Render()
 	GraphicsManager::GetInstance()->SetPerspectiveProjection(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
 	GraphicsManager::GetInstance()->AttachCamera(&camera);
 	EntityManager::GetInstance()->Render();
-    //theEnemy->Render();
 	// Setup 2D pipeline then render 2D
 	int halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2;
 	int halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2;

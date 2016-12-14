@@ -69,15 +69,15 @@ void CPlayerInfo::Init(void)
     pos.Set(1, 1, 1);
     scale.Set(-1, -1, -1);
 
-    this->SetCollider(true);
+   // this->SetCollider(true);
     this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
 
 	// Set the pistol as the primary weapon
-	primaryWeapon = new CSniper();
-    playerWeapon = SNIPERRIFLE;
+	primaryWeapon = new CMachineGun();
+    playerWeapon = MACHINEGUN;
 	primaryWeapon->Init();
 
-	secondaryWeapon = new CGrenadeThrow();
+	secondaryWeapon = new CLaserBlaster();
 	secondaryWeapon->Init();
 
     //EntityManager::GetInstance()->AddEntity(this, true);
@@ -479,12 +479,21 @@ void CPlayerInfo::Update(double dt)
 	}
 
 	// if Mouse Buttons were activated, then act on them
+    primaryWeapon->Update(dt);
     if (MouseController::GetInstance()->IsButtonPressed(MouseController::LMB) || MouseController::GetInstance()->IsButtonDown(MouseController::LMB))
 	{
         if (primaryWeapon && playerWeapon != SNIPERRIFLE)
         {
-            primaryWeapon->Update(dt);
-            primaryWeapon->Discharge(position, target, this);
+            Vector3 radius =  (target - position).Normalized();
+            Vector3 dir = (target - position).Normalized();
+            radius.Set(position.x + 2 * (-radius.z), position.y, position.z + 2 * (radius.x));
+            //float temp = radius.x;
+            //radius.x = radius.z;
+            //radius.z = temp;
+            //radius *= (target - position).Length();
+            //radius += position;
+            //temp.y += 2;
+            primaryWeapon->Discharge(radius, dir, this);
             //target.y -= (sin(primaryWeapon->GetRecoil()) * dt);
         }
         else
