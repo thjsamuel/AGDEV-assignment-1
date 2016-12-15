@@ -133,8 +133,8 @@ void SceneText::Init()
     MeshBuilder::GetInstance()->GenerateText("world text", 16, 16);
     MeshBuilder::GetInstance()->GetMesh("world text")->textureID = LoadTGA("Image//calibri.tga");
     MeshBuilder::GetInstance()->GetMesh("world text")->material.kAmbient.Set(1, 0, 0);
-	MeshBuilder::GetInstance()->GenerateOBJ("Chair", "OBJ//chair.obj");
-	MeshBuilder::GetInstance()->GetMesh("Chair")->textureID = LoadTGA("Image//chair.tga");
+	//MeshBuilder::GetInstance()->GenerateOBJ("Chair", "OBJ//chair.obj");
+	//MeshBuilder::GetInstance()->GetMesh("Chair")->textureID = LoadTGA("Image//chair.tga");
 	MeshBuilder::GetInstance()->GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
 	MeshBuilder::GetInstance()->GenerateSphere("lightball", Color(1, 1, 1), 18, 36, 1.f);
 	MeshBuilder::GetInstance()->GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 1.f);
@@ -160,30 +160,40 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GetMesh("SKYBOX_TOP")->textureID = LoadTGA("Image//SkyBox//skybox_top.tga");
 	MeshBuilder::GetInstance()->GetMesh("SKYBOX_BOTTOM")->textureID = LoadTGA("Image//SkyBox//skybox_bottom.tga");
 	MeshBuilder::GetInstance()->GenerateRay("laser", 10.f);
-	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f,1.f,1.f);
-    MeshBuilder::GetInstance()->GenerateSphere("Bullet", Color(1.0f, 0.0f, 0.0f), 10, 15, 0.1f);
-    MeshBuilder::GetInstance()->GenerateCube("blockade", Color(1.0f, 1.0f, 0.0f), 1.0f,1.f,1.f);
-    MeshBuilder::GetInstance()->GenerateQuad("target", Color(1, 1, 1), 1.f);
-    MeshBuilder::GetInstance()->GetMesh("target")->textureID = LoadTGA("Image//Misc//target.tga");
-	MeshBuilder::GetInstance()->GenerateCube("targetmedium", Color(1.0f, 0.0f, 0.0f), 4.0f,4.f,4.f);
-
 	// Robot head
 	MeshBuilder::GetInstance()->GenerateCube("Head", Color(1.0f, 0.0f, 0.0f), 5.0f,5.f,5.f);
+	MeshBuilder::GetInstance()->GenerateSphere("Headsphere", Color(1, 0, 0), 18, 36, 1.f);
 	// Robot body
 	MeshBuilder::GetInstance()->GenerateCube("Body", Color(0.0f, 0.0f, 0.5f), 10.0f,10.f,10.f);
+	MeshBuilder::GetInstance()->GenerateSphere("Bodysphere", Color(1, 0, 0), 18, 36, 1.f);
 	// Robot right arm
 	MeshBuilder::GetInstance()->GenerateCube("RightArm", Color(0.0f, 0.5f, 0.0f), 3.0f,10.f,3.f);
+	MeshBuilder::GetInstance()->GenerateSphere("RightArmsphere", Color(1, 0, 0), 18, 36, 1.f);
 	// Robot left arm
 	MeshBuilder::GetInstance()->GenerateCube("LeftArm", Color(0.0f, 0.5f, 0.0f), 3.0f, 10.f, 3.f);
+	MeshBuilder::GetInstance()->GenerateSphere("LeftArmsphere", Color(1, 0, 0), 18, 36, 1.f);
 	// Robot right leg
 	MeshBuilder::GetInstance()->GenerateCube("RightLeg", Color(0.0f, 0.5f, 0.5f), 3.0f, 15.f, 3.f);
+	MeshBuilder::GetInstance()->GenerateSphere("RightLegsphere", Color(1, 0, 0), 18, 36, 1.f);
 	// Robot left leg
 	MeshBuilder::GetInstance()->GenerateCube("LeftLeg", Color(0.0f, 0.5f, 0.5f), 3.0f,15.f,3.f);
+	MeshBuilder::GetInstance()->GenerateSphere("LeftLegsphere", Color(1, 0, 0), 18, 36, 1.f);
 
 	MeshBuilder::GetInstance()->GenerateCube("test", Color(1.0f, 1.0f, 0.f), 3.0f, 15.f, 3.f);
 
-
 	CSpatialPartition::GetInstance()->Init(150, 150, 10, 10);
+	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f, 1.f, 1.f);
+    MeshBuilder::GetInstance()->GenerateSphere("Bullet", Color(1.0f, 1.0f, 0.0f), 10, 15, 0.1f);
+    MeshBuilder::GetInstance()->GenerateQuad("target", Color(1, 1, 1), 1.f);
+    MeshBuilder::GetInstance()->GetMesh("target")->textureID = LoadTGA("Image//Misc//target.tga");
+    MeshBuilder::GetInstance()->GenerateQuad("machine gun", Color(1, 1, 1), 1.f);
+    MeshBuilder::GetInstance()->GetMesh("machine gun")->textureID = LoadTGA("Image//Weapons//M4A1.tga");
+    MeshBuilder::GetInstance()->GenerateCube("wall", Color(0.75f, 0.75f, 0.75f), 1.0f);
+    MeshBuilder::GetInstance()->GetMesh("wall")->textureID = LoadTGA("Image//Objects//Cinderblock.tga");
+    MeshBuilder::GetInstance()->GenerateOBJ("wallobj", "OBJ//wall.obj");
+    MeshBuilder::GetInstance()->GetMesh("wallobj")->textureID = LoadTGA("Image//Objects//Cinderblock.tga");
+	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
+
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
 	CSpatialPartition::GetInstance()->SetCamera(&camera);
 	CSpatialPartition::GetInstance()->SetLevelOfDetails(40000.0f, 160000.0f);
@@ -324,7 +334,7 @@ void SceneText::Init()
 
     //CSceneNode* targetInGrid = CSceneGraph::GetInstance()->GetInstance()->AddNode(target);
 
-    timeBoard = Create::Entity("cubeSG", Vector3(50.f, 0.0f, -120.0f), Vector3(15, 5, 5));
+    timeBoard = Create::Entity("cubeSG", Vector3(50.f, 0.0f, -250.0f), Vector3(15, 5, 5));
     timeBoard->isText = true;
     timeBoard->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
     timeBoard->InitLOD("cubeSG", "cubeSG", "cubeSG");
@@ -347,7 +357,7 @@ void SceneText::Init()
     }
 	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
 //	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
-	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
+	Create::Sprite2DObject("crosshair", Vector3(2.5f, -2.5f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
 
 	SkyBoxEntity* theSkyBox = Create::SkyBox("SKYBOX_FRONT", "SKYBOX_BACK",
 											 "SKYBOX_LEFT", "SKYBOX_RIGHT",
@@ -358,11 +368,35 @@ void SceneText::Init()
 	groundEntity->SetScale(Vector3(100.0f, 100.0f, 100.0f));
 	groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
 	playerInfo->SetTerrain(groundEntity);
-    GenericEntity* blockade = Create::Entity("blockade", Vector3(0, 0.0f, -200.0f), Vector3(100, 50.0f, 30.0f));
-    blockade->SetCollider(true);
-    blockade->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-    blockade->InitLOD("cube", "cubeSG", "cubeSG");
-	
+
+
+    num_walls = 10;
+    for (int i = 0; i < num_walls; ++i)
+    {
+        GenericEntity* blockade = Create::Entity("wall", Vector3(0, 0.0f, i * -200.0f), Vector3(400.f, 15.0f, 5.0f));
+        blockade->SetCollider(true);
+        blockade->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+        //4blockade->InitLOD("wall", "wall", "wall");
+        blockade->isWall = true;
+        collidableWalls.push_back(blockade);
+    }
+
+    float joinX = collidableWalls[0]->GetPosition().x - collidableWalls[0]->GetScaleE().x * 0.5f;
+    float joinZ = collidableWalls[0]->GetPosition().z - collidableWalls[0]->GetScaleE().z * 0.5f;
+    collidableWalls[0]->SetPosition(Vector3(0, -8.5, 200));
+    collidableWalls[1]->SetScale(Vector3(5.f, 15.0f, 400.0f));
+    collidableWalls[1]->SetPosition(Vector3(joinX, -8.5f, 0));
+    collidableWalls[2]->SetScale(Vector3(5.f, 15.0f, 400.0f));
+    collidableWalls[2]->SetPosition(Vector3(-joinX, -8.5f, 0));
+    collidableWalls[3]->SetPosition(Vector3(0, -8.5f, -200));
+
+    for (int i = 0; i < num_walls; ++i)
+    {
+        Vector3 objPos = collidableWalls[i]->GetPosition();
+        Vector3 objSca = collidableWalls[i]->GetScaleE();
+        playerInfo->CollideFront(objPos, objSca);
+    }
+
     //for (int i = 0; i < 10; ++i)
     {
         //theEnemy[i].SetTerrain(groundEntity);
@@ -377,11 +411,18 @@ void SceneText::Init()
 	{
 		textObj[i] = Create::Text2DObject("text", Vector3(-halfWindowWidth, -halfWindowHeight + fontSize*i + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(0.0f,1.0f,0.0f));
 	}
-	textObj[0]->SetText("HELLO WORLD");
+	//textObj[0]->SetText("HELLO WORLD");
+    textObj[2]->SetPosition(Vector3(textObj[2]->GetPosition().x, textObj[2]->GetPosition().y - 45, textObj[2]->GetPosition().z));
     textObj[3] = Create::Text3DObject("world text", timeBoard->GetPosition(), "", Vector3(fontSize, fontSize, fontSize), Color(1, 0, 0));
 
 	scoop = 45;
 	isScoop = false;
+
+    for (int i = 0; i < 4; ++i)
+    {
+        textUI[i] = Create::Text2DObject("text", Vector3(-halfWindowWidth, -halfWindowHeight + fontSize*i + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(0.5f, 0.5f, 0.5f));
+    }
+    mcsprite = nullptr; pisprite = nullptr;
 }
 
 void SceneText::TargetUpdate(double dt)
@@ -407,9 +448,6 @@ void SceneText::Update(double dt)
 {
 	// Update our entities
 	EntityManager::GetInstance()->Update(dt);
-    Vector3 objPos = Vector3(0, 0.0f, -200.0f);
-    Vector3 objSca = Vector3(100, 50.0f, 30.0f);
-    playerInfo->CollideFront(objPos, objSca);
 	// THIS WHOLE CHUNK TILL <THERE> CAN REMOVE INTO ENTITIES LOGIC! Or maybe into a scene function to keep the update clean
 	if(KeyboardController::GetInstance()->IsKeyDown('1'))
 		glEnable(GL_CULL_FACE);
@@ -498,8 +536,32 @@ void SceneText::Update(double dt)
 
 	// Update the player position and other details based on keyboard and mouse inputs
 	playerInfo->Update(dt);
-    //theEnemy->Update(dt);
 	TargetUpdate(dt);
+    if (prevWeapon != playerInfo->GetWeaponType())
+    {
+        if (playerInfo->GetWeaponType() == playerInfo->MACHINEGUN)
+        {
+            mcsprite = Create::Sprite2DObject("machine gun", Vector3(100.0f, -130.0f, 1.0f), Vector3(1024.0f, 450.0f, 300.0f));
+            prevWeapon = playerInfo->GetWeaponType();
+        }
+        else if (mcsprite != nullptr && !mcsprite->IsDone())
+        {
+            mcsprite->SetIsDone(true);
+            mcsprite = nullptr;
+            delete mcsprite;
+        }
+        if (playerInfo->GetWeaponType() == playerInfo->PISTOL)
+        {
+            pisprite = Create::Sprite2DObject("crosshair", Vector3(100.0f, -130.0f, -2.0f), Vector3(1024.0f, 450.0f, 300.0f));
+            prevWeapon = playerInfo->GetWeaponType();
+        }
+        else if (pisprite != nullptr && !pisprite->IsDone())
+        {
+            pisprite->SetIsDone(true);
+            pisprite = nullptr;
+            delete pisprite;
+        }
+    }
 
 	//camera.Update(dt); // Can put the camera into an entity rather than here (Then we don't have to write this)
 
@@ -508,15 +570,15 @@ void SceneText::Update(double dt)
 	// Update the 2 text object values. NOTE: Can do this in their own class but i'm lazy to do it now :P
 	// Eg. FPSRenderEntity or inside RenderUI for LightEntity
 	std::ostringstream ss;
-	ss.precision(5);
-	float fps = (float)(1.f / dt);
-	ss << "FPS: " << fps;
-	textObj[1]->SetText(ss.str());
+	//ss.precision(5);
+	//float fps = (float)(1.f / dt);
+	//ss << "FPS: " << fps;
+	//textObj[1]->SetText(ss.str());
 
-	std::ostringstream ss1;
-	ss1.precision(4);
-	ss1 << "Player:" << playerInfo->GetPos();
-	textObj[2]->SetText(ss1.str());
+	//std::ostringstream ss1;
+	//ss1.precision(4);
+	//ss1 << "Player:" << playerInfo->GetPos();
+	//textObj[2]->SetText(ss1.str());
 
 	/*if (target->TargetActivated == false)
 		target->SetUpdateTransformation(aRotateMtx);
@@ -533,48 +595,56 @@ void SceneText::Update(double dt)
     ss << "Time: " << timer->countdown;
     textObj[3]->SetText(ss.str());
 
-	if (EntityManager::GetInstance()->CheckerHead ==true)
+	if (EntityManager::GetInstance()->CheckerHead == true)
 	{
 		if (isScoop)
 			Head->InitLOD("Head", "Head", "Head");
 		else
-			Head->InitLOD("sphere", "sphere", "sphere");
+			Head->InitLOD("Headsphere", "Headsphere", "Headsphere");
 	}
 	if (EntityManager::GetInstance()->CheckerBody == true)
 	{
 		if (isScoop)
 			Body->InitLOD("Body", "Body", "Body");
 		else
-			Body->InitLOD("sphere", "sphere", "sphere");
+			Body->InitLOD("Bodysphere", "Bodysphere", "Bodysphere");
 	}
 	if (EntityManager::GetInstance()->CheckerRightArm == true)
 	{
 		if (isScoop)
 			RightArm->InitLOD("RightArm", "RightArm", "RightArm");
 		else
-			RightArm->InitLOD("sphere", "sphere", "sphere");
+			RightArm->InitLOD("RightArmsphere", "RightArmsphere", "RightArmsphere");
 	}
 	if (EntityManager::GetInstance()->CheckerLeftArm == true)
 	{
 		if (isScoop)
-			LeftArm->InitLOD("LeftArm", "LeftArm", "v");
+			LeftArm->InitLOD("LeftArm", "LeftArm", "LeftArm");
 		else
-			LeftArm->InitLOD("sphere", "sphere", "sphere");
+			LeftArm->InitLOD("LeftArmsphere", "LeftArmsphere", "LeftArmsphere");
 	}
 	if (EntityManager::GetInstance()->CheckerRightleg == true)
 	{
 		if (isScoop)
 			Rightleg->InitLOD("RightLeg", "RightLeg", "RightLeg");
 		else
-			Rightleg->InitLOD("sphere", "sphere", "sphere");
+			Rightleg->InitLOD("RightLegsphere", "RightLegsphere", "RightLegsphere");
 	}
 	if (EntityManager::GetInstance()->CheckerLeftleg == true)
 	{
 		if (isScoop)
 			Leftleg->InitLOD("LeftLeg", "LeftLeg", "LeftLeg");
 		else
-			Leftleg->InitLOD("sphere", "sphere", "sphere");
+			Leftleg->InitLOD("LeftLegsphere", "LeftLegsphere", "LeftLegsphere");
 	}
+    int windowWidth = Application::GetInstance().GetWindowWidth();
+    int windowHeight = Application::GetInstance().GetWindowHeight();
+
+    ss.str("");
+    ss.precision(4);
+    ss << playerInfo->GetPrimaryWeapon().GetMagRound() << " / " << playerInfo->GetPrimaryWeapon().GetTotalRound();
+    textUI[0]->SetPosition(Vector3(windowWidth * 0.25f, -285, 0));
+    textUI[0]->SetText(ss.str());
 }
 
 void SceneText::Render()

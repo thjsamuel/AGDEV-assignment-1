@@ -14,6 +14,9 @@
 
 
 #include "Timer\Timer.h"
+#include <vector>
+#include "SpriteEntity.h"
+using std::vector;
 
 class ShaderProgram;
 class SceneManager;
@@ -40,11 +43,15 @@ private:
 	GroundEntity* groundEntity;
 	FPSCamera camera;
 	TextEntity* textObj[4];
+    TextEntity* textUI[4];
+
 	Light* lights[2];
 
 	//vector<GenericEntity*> target;
 	GenericEntity* target;
     GenericEntity* timeBoard;
+    vector<GenericEntity*> collidableWalls;
+    int num_walls;
     Timer* timer;
     CEnemy* theEnemy;
 	CUpdateTransformation* aRotateMtx;
@@ -58,6 +65,10 @@ private:
 	GenericEntity* LeftArm;
 	GenericEntity* Rightleg;
 	GenericEntity* Leftleg;
+
+    SpriteEntity* mcsprite;
+    SpriteEntity* pisprite;
+    CPlayerInfo::WEAPONS prevWeapon;
 
 	static SceneText* sInstance; // The pointer to the object that gets registered
 };

@@ -34,17 +34,17 @@ void EntityManager::Update(double _dt)
 			// Delete if done
 			GenericEntity* genericTemp = dynamic_cast<GenericEntity*>((*it));
 
-			if (genericTemp != nullptr && genericTemp->GetMesh()->name == "Head")
+			if (genericTemp != nullptr && (genericTemp->GetMesh()->name == "Head" || genericTemp->GetMesh()->name == "Headsphere"))
 				CheckerHead = false;
-			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "Body")
+			else if (genericTemp != nullptr && (genericTemp->GetMesh()->name == "Body" || genericTemp->GetMesh()->name == "Bodysphere") )
 				CheckerBody = false;
-			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "RightArm")
+			else if (genericTemp != nullptr && (genericTemp->GetMesh()->name == "RightArm" || genericTemp->GetMesh()->name == "RightArmsphere"))
 				CheckerRightArm = false;
-			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "LeftArm")
+			else if (genericTemp != nullptr && (genericTemp->GetMesh()->name == "LeftArm" || genericTemp->GetMesh()->name == "LeftArmsphere"))
 				CheckerLeftArm = false;
-			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "RightLeg")
+			else if (genericTemp != nullptr && (genericTemp->GetMesh()->name == "RightLeg" ||  genericTemp->GetMesh()->name == "RightLegsphere"))
 				CheckerRightleg = false;
-			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "LeftLeg")
+			else if (genericTemp != nullptr && (genericTemp->GetMesh()->name == "LeftLeg" ||  genericTemp->GetMesh()->name == "LeftLegsphere"))
 				CheckerLeftleg = false;
 			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "target")
 				CheckerTarget = false;
@@ -69,8 +69,9 @@ void EntityManager::Render()
 	end = entityList.end();
 	for (it = entityList.begin(); it != end; ++it)
 	{
-		//if ((*it)->isTarget == false)
-		(*it)->Render();
+//if ((*it)->isTarget == false)
+        if ((*it)->IsDone() == false)
+		    (*it)->Render();
 	}
 
 	CSceneGraph::GetInstance()->Render();
@@ -351,7 +352,7 @@ bool EntityManager::CheckForCollision(void)
                 }
             }
 		}
-		else if ((*colliderThis)->HasCollider())
+        else if ((*colliderThis)->HasCollider() && (*colliderThis)->isWall == false)
 		{
 			// This object was derived from a CCollider class, then it will have Collision Detection methods
 			//CCollider *thisCollider = dynamic_cast<CCollider*>(*colliderThis);

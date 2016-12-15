@@ -10,6 +10,7 @@ EntityBase::EntityBase()
     , isTarget(false)
 	, TargetActivated(false)
     , isText(false)
+    , isWall(false)
 {
 }
 

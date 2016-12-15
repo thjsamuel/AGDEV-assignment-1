@@ -44,10 +44,10 @@ void CGrenade::Update(double dt)
 		for (size_t i = 0; i < ExportList.size(); ++i)
 		{
 			// Remove from Scene Graph
-			if (CSceneGraph::GetInstance()->DeleteNode(ExportList[i]) == true)
-			{
-				cout << "*** This Entity removed ***" << endl;
-			}
+            /*if (*/CSceneGraph::GetInstance()->DeleteNode(ExportList[i]);/* == true)*/
+			//{
+				// << "*** This Entity removed ***" << endl;
+			//}
 
 
 		}
@@ -58,10 +58,11 @@ void CGrenade::Update(double dt)
 	{
 		// Update Position
 		m_fElapsedTime += (float)dt;
-		position.Set(static_cast<float>(position.x + (theDirection.x * m_fElapsedTime * m_fSpeed),
-			position.y + (theDirection.y * m_fElapsedTime * m_fSpeed)
-			+ (0.5 * m_fGravity * m_fElapsedTime * m_fElapsedTime),
-			position.z + (theDirection.z * m_fElapsedTime * m_fSpeed)));
+		//position.Set(static_cast<float>(position.x + (float)(theDirection.x * m_fElapsedTime * m_fSpeed), position.y + (float)(theDirection.y * m_fElapsedTime * m_fSpeed) + (0.5 * m_fGravity * m_fElapsedTime * m_fElapsedTime),
+		//	position.z + (float)(theDirection.z * m_fElapsedTime * m_fSpeed)));
+        position.Set(position.x + (float)(theDirection.x * m_fElapsedTime * m_fSpeed),
+            position.y + (float)(theDirection.y * m_fElapsedTime * m_fSpeed) + (0.5 * m_fGravity * m_fElapsedTime * m_fElapsedTime),
+            position.z + (float)(theDirection.z * m_fElapsedTime * m_fSpeed));
 		if (position.y < m_pTerrain->GetTerrainHeight(position) - 10.0f)
 		{
 			position.y = m_pTerrain->GetTerrainHeight(position) - 10.0f;

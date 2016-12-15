@@ -17,7 +17,7 @@ public:
 	inline Vector3 GetPosition(){ return position; };
 
 	inline void SetScale(const Vector3& _value){ scale = _value; };
-	inline Vector3 GetScale(){ return scale; };
+	inline Vector3 GetScaleE(){ return scale; };
 
 	bool IsDone();
 	void SetIsDone(const bool _value);
@@ -33,6 +33,7 @@ public:
     bool isTarget;
 	bool TargetActivated;
     bool isText;
+    bool isWall;
     bool bCube;
 protected:
 	Vector3 position;

@@ -30,12 +30,18 @@ CPlayerInfo::CPlayerInfo(void)
 	, m_pTerrain(NULL)
 	, primaryWeapon(NULL)
 	, secondaryWeapon(NULL)
-    , playerWeapon(MAX_WEAPON)
+    , tertiaryWeapon(NULL)
+    , activeWeapon(MAX_WEAPON)
 {
 }
 
 CPlayerInfo::~CPlayerInfo(void)
 {
+    if (tertiaryWeapon)
+    {
+        delete tertiaryWeapon;
+        tertiaryWeapon = NULL;
+    }
 	if (secondaryWeapon)
 	{
 		delete secondaryWeapon;
@@ -66,19 +72,19 @@ void CPlayerInfo::Init(void)
 	maxBoundary.Set(1,1,1);
 	minBoundary.Set(-1, -1, -1);
 
-    pos.Set(1, 1, 1);
-    scale.Set(-1, -1, -1);
-
    // this->SetCollider(true);
     this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
 
 	// Set the pistol as the primary weapon
 	primaryWeapon = new CMachineGun();
-	playerWeapon = MACHINEGUN;
+    activeWeapon = MACHINEGUN;
 	primaryWeapon->Init();
 
-	secondaryWeapon = new CGrenadeThrow();
+	secondaryWeapon = new CPistol();
 	secondaryWeapon->Init();
+
+    tertiaryWeapon = new CGrenadeThrow();
+    tertiaryWeapon->Init();
 
     //EntityManager::GetInstance()->AddEntity(this, true);
 }
@@ -264,6 +270,16 @@ double CPlayerInfo::GetJumpAcceleration(void) const
 GroundEntity* CPlayerInfo::GetTerrain(void)
 {
 	return m_pTerrain;
+}
+
+CPlayerInfo::WEAPONS CPlayerInfo::GetWeaponType(void)
+{
+    return activeWeapon;
+}
+
+const CWeaponInfo CPlayerInfo::GetPrimaryWeapon(void)
+{
+    return *primaryWeapon;
 }
 
 // Update Jump Upwards
@@ -463,30 +479,51 @@ void CPlayerInfo::Update(double dt)
 		SetToJumpUpwards(true);
 	}
 
+    if (KeyboardController::GetInstance()->IsKeyPressed(0x31) && activeWeapon != MACHINEGUN)
+    {
+        //if (primaryWeapon)
+        //{
+        //    delete primaryWeapon;
+        //    primaryWeapon = NULL;
+        //}
+        //primaryWeapon = new CGrenadeThrow();
+        activeWeapon = MACHINEGUN;
+        //primaryWeapon->Init();
+    }
+    else if (KeyboardController::GetInstance()->IsKeyPressed(0x32) && activeWeapon != PISTOL)
+    {
+        activeWeapon = PISTOL;
+    }
 	// Update the weapons
 	if (KeyboardController::GetInstance()->IsKeyReleased('R'))
 	{
-		if (primaryWeapon)
+		if (primaryWeapon && activeWeapon == MACHINEGUN)
 		{
 			primaryWeapon->Reload();
 			//primaryWeapon->PrintSelf();
 		}
-		if (secondaryWeapon)
+        if (secondaryWeapon&& activeWeapon == PISTOL)
 		{
 			secondaryWeapon->Reload();
 			//primaryWeapon->PrintSelf();
 		}
+        if (tertiaryWeapon)
+        {
+            tertiaryWeapon->Reload();
+            //primaryWeapon->PrintSelf();
+        }
 	}
-
+    secondaryWeapon->Update(dt);
+    tertiaryWeapon->Update(dt);
 	// if Mouse Buttons were activated, then act on them
-    primaryWeapon->Update(dt);
     if (MouseController::GetInstance()->IsButtonPressed(MouseController::LMB) || MouseController::GetInstance()->IsButtonDown(MouseController::LMB))
 	{
-        if (primaryWeapon && playerWeapon != SNIPERRIFLE)
+        if (primaryWeapon && activeWeapon != SNIPERRIFLE && activeWeapon == MACHINEGUN)
         {
+            primaryWeapon->Update(dt);
             Vector3 radius =  (target - position).Normalized();
             Vector3 dir = (target - position).Normalized();
-            radius.Set(position.x + 2 * (-radius.z), position.y, position.z + 2 * (radius.x));
+            radius.Set(position.x + -radius.z, position.y * radius.y - 1.5f, position.z + 2 * (radius.x));
             //float temp = radius.x;
             //radius.x = radius.z;
             //radius.z = temp;
@@ -496,24 +533,27 @@ void CPlayerInfo::Update(double dt)
             primaryWeapon->Discharge(radius, dir, this);
             //target.y -= (sin(primaryWeapon->GetRecoil()) * dt);
         }
-        else
+        else if (activeWeapon == SNIPERRIFLE)
         {
             if (primaryWeapon->GetCanFire())
                 primaryWeapon->SetElapsed(0.0);
             primaryWeapon->Discharge(position, target, this);
         }
+        if (secondaryWeapon && activeWeapon == PISTOL)
+        {
+            secondaryWeapon->Discharge(position, target, this);
+        }
 	}
 	else if (MouseController::GetInstance()->IsButtonPressed(MouseController::RMB))
 	{
-        if (secondaryWeapon)
+        if (tertiaryWeapon)
         {
-            secondaryWeapon->Update(dt);
-            secondaryWeapon->Discharge(position, target, this);
+            tertiaryWeapon->Discharge(position, target, this);
         }
 	}
     if (MouseController::GetInstance()->IsButtonUp(MouseController::LMB))
     {
-        if (primaryWeapon && playerWeapon == SNIPERRIFLE)
+        if (primaryWeapon && activeWeapon == SNIPERRIFLE)
         {
             primaryWeapon->UpdateSniper(dt);
         }
@@ -556,23 +596,34 @@ void CPlayerInfo::Constrain(void)
 	if (position.z < minBoundary.z + 1.0f)
 		position.z = minBoundary.z + 1.0f;
 
-    if (CollisionCourse(pos, scale))
+    for (int i = 0; i < posScale.size(); ++i)
     {
-        if (position.z - 1 < pos.z + (scale.z * 0.5))
-            position.z = (float)(pos.z + (scale.z * 0.5)) + 1;
+        if (i % 2 == 0)
+        {
+            //for (int j = i + 1; i < posScale.size(); ++i)
+            //{
+            int j = i + 1;
+            Vector3 pos(posScale[i]);
+            Vector3 sca(posScale[j]);
+            if (CollisionCourse(pos, sca))
+            {
+                if (position.z - 1 < pos.z + (sca.z * 0.5))
+                    position.z = (float)(pos.z + (sca.z * 0.5)) + 1;
 
-    }
-    else if (CollisionCourseBack(pos, scale))
-    {
-        if (position.z + 1 > pos.z - (scale.z * 0.5))
-            position.z = (float)(pos.z - (scale.z * 0.5)) - 1;
-    }
-    else if (CollisionCourseSide(pos, scale))
-    {
-        if (position.x + 1 > pos.x - (scale.x * 0.5) && position.x + 1 < pos.x)
-            position.x = (float)(pos.x - (scale.x * 0.5)) - 1;
-        if (position.x - 1 < pos.x + (scale.x * 0.5) && position.x - 1 > pos.x)
-            position.x = (float)(pos.x + (scale.x * 0.5)) + 1;
+            }
+            else if (CollisionCourseBack(pos, sca))
+            {
+                if (position.z + 1 > pos.z - (sca.z * 0.5))
+                    position.z = (float)(pos.z - (sca.z * 0.5)) - 1;
+            }
+            else if (CollisionCourseSide(pos, sca))
+            {
+                if (position.x + 1 > pos.x - (sca.x * 0.5) && position.x + 1 < pos.x)
+                    position.x = (float)(pos.x - (sca.x * 0.5)) - 1;
+                if (position.x - 1 < pos.x + (sca.x * 0.5) && position.x - 1 > pos.x)
+                    position.x = (float)(pos.x + (sca.x * 0.5)) + 1;
+            }
+        }
     }
 
 	// if the player is not jumping nor falling, then adjust his y position
@@ -599,17 +650,8 @@ void CPlayerInfo::CollideFront(Vector3 pos, Vector3 scale)
     //    minBoundary = Vector3(pos.x + (scale.x * 0.5), pos.y + (scale.y * 0.5), pos.z + (scale.z * 0.5));
     //}
 
-    this->pos = pos;
-    this->scale = scale;
-
-    // if the player is not jumping nor falling, then adjust his y position
-    if ((m_bJumpUpwards == false) && (m_bFallDownwards == false))
-    {
-        // if the y position is not equal to terrain height at that position, 
-        // then update y position to the terrain height
-        if (position.y != m_pTerrain->GetTerrainHeight(position))
-            position.y = m_pTerrain->GetTerrainHeight(position);
-    }
+    posScale.push_back(pos);
+    posScale.push_back(scale);
 }
 
 void CPlayerInfo::AttachCamera(FPSCamera* _cameraPtr)
