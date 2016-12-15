@@ -4,6 +4,8 @@
 #include "../GroundEntity.h"
 #include "../WeaponInfo/WeaponInfo.h"
 #include "Collider/Collider.h"
+#include <vector>
+using std::vector;
 
 class CPlayerInfo : public EntityBase, public CCollider
 {
@@ -99,6 +101,8 @@ public:
 	double GetFallAcceleration(void) const;
 	// Get the terrain for the player info
 	GroundEntity* GetTerrain(void);
+    WEAPONS GetWeaponType(void);
+    const CWeaponInfo GetPrimaryWeapon(void);
 
 	// Update Jump Upwards
 	void UpdateJumpUpwards(double dt = 0.0333f);
@@ -118,7 +122,7 @@ private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 position, target, up;
 	Vector3 maxBoundary, minBoundary;
-    Vector3 pos, scale;
+    vector<Vector3> posScale;
 	GroundEntity* m_pTerrain;
 
 	double m_dSpeed;
@@ -137,5 +141,6 @@ private:
 
 	CWeaponInfo* primaryWeapon;
 	CWeaponInfo* secondaryWeapon;
-    WEAPONS playerWeapon;
+    CWeaponInfo* tertiaryWeapon;
+    WEAPONS activeWeapon;
 };

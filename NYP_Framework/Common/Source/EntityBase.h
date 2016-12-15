@@ -32,6 +32,7 @@ public:
 
     bool isTarget;
     bool isText;
+    bool isWall;
     bool bCube;
 protected:
 	Vector3 position;

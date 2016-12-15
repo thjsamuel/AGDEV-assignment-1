@@ -9,6 +9,7 @@ EntityBase::EntityBase()
     , bCube(false)
     , isTarget(false)
     , isText(false)
+    , isWall(false)
 {
 }
 

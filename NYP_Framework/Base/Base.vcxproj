@@ -50,7 +50,6 @@
     <ClInclude Include="Source\FPSCamera.h" />
     <ClInclude Include="Source\GameEntityType.h" />
     <ClInclude Include="Source\GenericEntity.h" />
-    <ClInclude Include="Source\GrenadeThrow.h" />
     <ClInclude Include="Source\Grid.h" />
     <ClInclude Include="Source\GroundEntity.h" />
     <ClInclude Include="Source\LaserBlaster.h" />
@@ -72,6 +71,7 @@
     <ClInclude Include="Source\Timer\Timer.h" />
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\UpdateTransform.h" />
+    <ClInclude Include="Source\WeaponInfo\GrenadeThrow.h" />
     <ClInclude Include="Source\WeaponInfo\Pistol.h" />
     <ClInclude Include="Source\WeaponInfo\Sniper.h" />
     <ClInclude Include="Source\WeaponInfo\WeaponInfo.h" />
