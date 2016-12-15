@@ -77,7 +77,7 @@ void CPlayerInfo::Init(void)
 	playerWeapon = MACHINEGUN;
 	primaryWeapon->Init();
 
-	secondaryWeapon = new CLaserBlaster();
+	secondaryWeapon = new CGrenadeThrow();
 	secondaryWeapon->Init();
 
     //EntityManager::GetInstance()->AddEntity(this, true);

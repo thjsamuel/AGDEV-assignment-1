@@ -49,6 +49,15 @@ private:
     CEnemy* theEnemy;
 	CUpdateTransformation* aRotateMtx;
 	float targetY;
+	float scoop;
+	bool isScoop;
+
+	GenericEntity* Head;
+	GenericEntity* Body;
+	GenericEntity* RightArm;
+	GenericEntity* LeftArm;
+	GenericEntity* Rightleg;
+	GenericEntity* Leftleg;
 
 	static SceneText* sInstance; // The pointer to the object that gets registered
 };

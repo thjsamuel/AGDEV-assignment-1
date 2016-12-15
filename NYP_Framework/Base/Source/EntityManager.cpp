@@ -19,7 +19,7 @@ void EntityManager::Update(double _dt)
 	}
 
 	CSceneGraph::GetInstance()->Update();
-
+	
 	if (theSpatialPartition)
 		theSpatialPartition->Update();
 
@@ -32,8 +32,26 @@ void EntityManager::Update(double _dt)
 		if ((*it)->IsDone())
 		{
 			// Delete if done
+			GenericEntity* genericTemp = dynamic_cast<GenericEntity*>((*it));
+
+			if (genericTemp != nullptr && genericTemp->GetMesh()->name == "Head")
+				CheckerHead = false;
+			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "Body")
+				CheckerBody = false;
+			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "RightArm")
+				CheckerRightArm = false;
+			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "LeftArm")
+				CheckerLeftArm = false;
+			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "RightLeg")
+				CheckerRightleg = false;
+			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "LeftLeg")
+				CheckerLeftleg = false;
+			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "target")
+				CheckerTarget = false;
+			
 			delete *it;
 			it = entityList.erase(it);
+			//(*it)->SetIsDone(false);
 		}
 		else
 		{
@@ -126,6 +144,13 @@ void EntityManager::SetSpatialPartition(CSpatialPartition* theSpatialPartition)
 // Constructor
 EntityManager::EntityManager()
 {
+	CheckerHead = true;
+	CheckerBody = true;
+	CheckerRightArm = true;
+	CheckerLeftArm = true;
+	CheckerRightleg = true;
+	CheckerLeftleg = true;
+	CheckerTarget = true;
 }
 
 // Destructor
@@ -356,24 +381,24 @@ bool EntityManager::CheckForCollision(void)
                                 if (CSceneGraph::GetInstance()->DeleteNode((*colliderThat)) == true)
                                     cout << "*** That Entity removed ***" << endl;
 						}
-                        else
-                        {
-                            CProjectile* thatEntity = dynamic_cast<CProjectile*>(*colliderThat);
-                            if (thatEntity == NULL)
-                                continue;
-                            Vector3 hitPosition = Vector3(0, 0, 0);
-                            CCollider *thisCollider = dynamic_cast<CCollider*>(*colliderThis);
-                            Vector3 thisMinAABB = (*colliderThis)->GetPosition() + thisCollider->GetMinAABB();
-                            Vector3 thisMaxAABB = (*colliderThis)->GetPosition() + thisCollider->GetMaxAABB();
-                            if (CheckLineSegmentPlane(thatEntity->GetPosition(), thatEntity->GetPosition() - thatEntity->GetDirection() * 10, thisMinAABB, thisMaxAABB, hitPosition) == true)
-                            {
-                                (*colliderThis)->SetIsDone(true);
-                                (*colliderThat)->SetIsDone(true);
+                        //else
+                        //{
+                        //    CProjectile* thatEntity = dynamic_cast<CProjectile*>(*colliderThat);
+                        //    if (thatEntity == NULL)
+                        //        continue;
+                        //    Vector3 hitPosition = Vector3(0, 0, 0);
+                        //    CCollider *thisCollider = dynamic_cast<CCollider*>(*colliderThis);
+                        //    Vector3 thisMinAABB = (*colliderThis)->GetPosition() + thisCollider->GetMinAABB();
+                        //    Vector3 thisMaxAABB = (*colliderThis)->GetPosition() + thisCollider->GetMaxAABB();
+                        //    if (CheckLineSegmentPlane(thatEntity->GetPosition(), thatEntity->GetPosition() - thatEntity->GetDirection() * 10, thisMinAABB, thisMaxAABB, hitPosition) == true)
+                        //    {
+                        //        (*colliderThis)->SetIsDone(true);
+                        //        (*colliderThat)->SetIsDone(true);
 
-                                CSceneGraph::GetInstance()->DeleteNode((*colliderThis));
-                                CSceneGraph::GetInstance()->DeleteNode((*colliderThat));
-                            }
-                        }
+                        //        CSceneGraph::GetInstance()->DeleteNode((*colliderThis));
+                        //        CSceneGraph::GetInstance()->DeleteNode((*colliderThat));
+                        //    }
+                        //}
 					}
 				}
 			}

@@ -139,7 +139,7 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateSphere("lightball", Color(1, 1, 1), 18, 36, 1.f);
 	MeshBuilder::GetInstance()->GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 1.f);
 	MeshBuilder::GetInstance()->GenerateCone("cone", Color(0.5f, 1, 0.3f), 36, 10.f, 10.f);
-	MeshBuilder::GetInstance()->GenerateCube("cube", Color(1.0f, 1.0f, 0.0f), 1.0f);
+	MeshBuilder::GetInstance()->GenerateCube("cube", Color(1.0f, 1.0f, 0.0f), 1.0f,1.f,1.f);
 	MeshBuilder::GetInstance()->GetMesh("cone")->material.kDiffuse.Set(0.99f, 0.99f, 0.99f);
 	MeshBuilder::GetInstance()->GetMesh("cone")->material.kSpecular.Set(0.f, 0.f, 0.f);
 	MeshBuilder::GetInstance()->GenerateQuad("GRASS_DARKGREEN", Color(1, 1, 1), 1.f);
@@ -160,14 +160,30 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GetMesh("SKYBOX_TOP")->textureID = LoadTGA("Image//SkyBox//skybox_top.tga");
 	MeshBuilder::GetInstance()->GetMesh("SKYBOX_BOTTOM")->textureID = LoadTGA("Image//SkyBox//skybox_bottom.tga");
 	MeshBuilder::GetInstance()->GenerateRay("laser", 10.f);
-	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f);
+	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f,1.f,1.f);
     MeshBuilder::GetInstance()->GenerateSphere("Bullet", Color(1.0f, 0.0f, 0.0f), 10, 15, 0.1f);
-    MeshBuilder::GetInstance()->GenerateCube("blockade", Color(1.0f, 1.0f, 0.0f), 1.0f);
+    MeshBuilder::GetInstance()->GenerateCube("blockade", Color(1.0f, 1.0f, 0.0f), 1.0f,1.f,1.f);
     MeshBuilder::GetInstance()->GenerateQuad("target", Color(1, 1, 1), 1.f);
     MeshBuilder::GetInstance()->GetMesh("target")->textureID = LoadTGA("Image//Misc//target.tga");
-	MeshBuilder::GetInstance()->GenerateCube("targetmedium", Color(1.0f, 0.0f, 0.0f), 4.0f);
+	MeshBuilder::GetInstance()->GenerateCube("targetmedium", Color(1.0f, 0.0f, 0.0f), 4.0f,4.f,4.f);
 
-	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
+	// Robot head
+	MeshBuilder::GetInstance()->GenerateCube("Head", Color(1.0f, 0.0f, 0.0f), 5.0f,5.f,5.f);
+	// Robot body
+	MeshBuilder::GetInstance()->GenerateCube("Body", Color(0.0f, 0.0f, 0.5f), 10.0f,10.f,10.f);
+	// Robot right arm
+	MeshBuilder::GetInstance()->GenerateCube("RightArm", Color(0.0f, 0.5f, 0.0f), 3.0f,10.f,3.f);
+	// Robot left arm
+	MeshBuilder::GetInstance()->GenerateCube("LeftArm", Color(0.0f, 0.5f, 0.0f), 3.0f, 10.f, 3.f);
+	// Robot right leg
+	MeshBuilder::GetInstance()->GenerateCube("RightLeg", Color(0.0f, 0.5f, 0.5f), 3.0f, 15.f, 3.f);
+	// Robot left leg
+	MeshBuilder::GetInstance()->GenerateCube("LeftLeg", Color(0.0f, 0.5f, 0.5f), 3.0f,15.f,3.f);
+
+	MeshBuilder::GetInstance()->GenerateCube("test", Color(1.0f, 1.0f, 0.f), 3.0f, 15.f, 3.f);
+
+
+	CSpatialPartition::GetInstance()->Init(150, 150, 10, 10);
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
 	CSpatialPartition::GetInstance()->SetCamera(&camera);
 	CSpatialPartition::GetInstance()->SetLevelOfDetails(40000.0f, 160000.0f);
@@ -176,7 +192,80 @@ void SceneText::Init()
 	// Create entities into the scene
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
 	Create::Entity("lightball", Vector3(lights[0]->position.x, lights[0]->position.y, lights[0]->position.z)); // Lightball
-	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f, -20.0f));
+
+	// Robot head
+	Head = Create::Entity("Head", Vector3(0.0f, 20.0f, -20.0f));
+	Head->SetCollider(true);
+	Head->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	Head->InitLOD("Head", "sphere", "sphere");
+	
+	CSceneNode* theHead = CSceneGraph::GetInstance()->GetInstance()->AddNode(Head);
+	// Robot head
+
+	// Robot body
+	 Body = Create::Entity("Body", Vector3(0.0f, 13.0f, -20.0f));
+	Body->SetCollider(true);
+	Body->SetAABB(Vector3(3.f, 3.f, 3.f), Vector3(-3.f, -3.f, -3.f));
+	Body->InitLOD("Body", "sphere", "sphere");
+	
+
+	CSceneNode* theBody = theHead->AddChild(Body);
+	
+	// Robot body
+
+	// Robot Rightarm
+	RightArm = Create::Entity("RightArm", Vector3(6.0f, 10.0f, -20.f));
+	RightArm->SetCollider(true);
+	RightArm->SetAABB(Vector3(0.5f, 5.f, 0.5f), Vector3(-0.5f, -5.f, -0.5f));
+	RightArm->InitLOD("RightArm", "sphere", "sphere");
+	RightArm->ApplyRotate(45, 1.f, 0.f, 0.f);
+
+
+	CSceneNode* theRightArm = theBody->AddChild(RightArm);
+	//Robot Rightarm
+
+	// Robot Leftarm
+	 LeftArm = Create::Entity("LeftArm", Vector3(-6.0f, 10.0f, -20.f));
+	LeftArm->SetCollider(true);
+	LeftArm->SetAABB(Vector3(0.5f, 5.f, 0.5f), Vector3(-0.5f, -5.f, -0.5f));
+	LeftArm->InitLOD("LeftArm", "sphere", "sphere");
+	//LeftArm->ApplyTranslate(0, 0, 0);
+
+	CSceneNode* theLeftArm = theBody->AddChild(LeftArm);
+	// Robot Leftarm
+
+	// Robot Rightleg
+	Rightleg = Create::Entity("RightLeg", Vector3(2.0f, 0.0f, -20.f));
+	Rightleg->SetCollider(true);
+	Rightleg->SetAABB(Vector3(0.5f, 5.5f, 0.5f), Vector3(-0.5f, -5.5f, -0.5f));
+	Rightleg->InitLOD("RightLeg", "sphere", "sphere");
+	
+
+	CSceneNode* theRightleg = theBody->AddChild(Rightleg);
+	// Robot Rightleg
+
+	// Robot Leftleg
+	 Leftleg = Create::Entity("LeftLeg", Vector3(-2.0f, 0.0f, -20.f));
+	Leftleg->SetCollider(true);
+	Leftleg->SetAABB(Vector3(0.5f, 5.5f, 0.5f), Vector3(-0.5f, -5.5f, -0.5f));
+	Leftleg->InitLOD("LeftLeg", "sphere", "sphere");
+
+
+	CSceneNode* theLeftleg = theBody->AddChild(Leftleg);
+	// Robot Leftleg
+
+	//// test
+	//GenericEntity* test = Create::Entity("Leg" , Vector3(0.0f, -3.0f, 0.f));
+	//test->SetCollider(true);
+	//test -> SetAABB(Vector3(0.5f, 7.5f, 0.5f), Vector3(-0.5f, -7.5f, -0.5f));
+	//test->InitLOD("Leg", "Leg", "cubeSG");
+
+
+	//CSceneNode* thetest = theBody->AddChild(test);
+	//// test
+
+
+	/*GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f, -20.0f));
 	aCube->SetCollider(true);
 	aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 	aCube->InitLOD("cube", "sphere", "cubeSG");
@@ -187,20 +276,22 @@ void SceneText::Init()
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
 	}
 
-	GenericEntity* anotherCube = Create::Entity("cube", Vector3(-20.0f, 1.1f, -20.f));
+	GenericEntity* anotherCube = Create::Entity("cube", Vector3(-20.0f, 5.1f, -20.f));
 	anotherCube->SetCollider(true);
 	anotherCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	CSceneNode* anotherNode = theNode->AddChild(anotherCube);
+	CSceneNode* anotherNode = CSceneGraph::GetInstance()->GetInstance()->AddNode(anotherCube);
+
+
 	if (anotherNode == NULL)
 	{
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
-	}
+	}*/
 
 	targetY = -15.f;
     target = Create::Entity("target", Vector3(20.f, targetY, -80.0f));
     target->SetCollider(true);
     target->SetAABB(Vector3(5.0f, 5.0f, 5.0f), Vector3(-5.0f, -5.0f, -5.0f));
-    target->InitLOD("target", "sphere", "targetmedium");
+    target->InitLOD("target", "target", "sphere");
     target->isTarget = true;
 	target->SetScale(Vector3(10, 10, 10));
  //   CSceneNode* targetInGrid = CSceneGraph::GetInstance()->AddNode(target);
@@ -217,10 +308,11 @@ void SceneText::Init()
 	//GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
 	//CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
 
+
 	//GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
 	//CSceneNode* childNode = baseNode->AddChild(childCube);
 	//childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
-
+	//
 	//GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
 	//CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
 	//grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
@@ -239,14 +331,14 @@ void SceneText::Init()
 
     timer = new Timer(300.f);
 
-	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
-	GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* childNode = baseNode->AddChild(childCube);
-	childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
-	GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
-	grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
+	//GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
+	//GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* childNode = baseNode->AddChild(childCube);
+	//childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
+	//GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
+	//grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
     
     theEnemy = new CEnemy[10];
     //for (int i = 0; i < 10; ++i)
@@ -270,6 +362,7 @@ void SceneText::Init()
     blockade->SetCollider(true);
     blockade->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
     blockade->InitLOD("cube", "cubeSG", "cubeSG");
+	
     //for (int i = 0; i < 10; ++i)
     {
         //theEnemy[i].SetTerrain(groundEntity);
@@ -286,6 +379,9 @@ void SceneText::Init()
 	}
 	textObj[0]->SetText("HELLO WORLD");
     textObj[3] = Create::Text3DObject("world text", timeBoard->GetPosition(), "", Vector3(fontSize, fontSize, fontSize), Color(1, 0, 0));
+
+	scoop = 45;
+	isScoop = false;
 }
 
 void SceneText::TargetUpdate(double dt)
@@ -294,20 +390,16 @@ void SceneText::TargetUpdate(double dt)
 	vector<EntityBase*> list = CSpatialPartition::GetInstance()->GetObjects(playerInfo->GetPos(), 1.0f);
 	for (int i = 0; i < list.size(); ++i)
 	{
-		//if (/*list.size() > 1&&*/ list[i]->isTarget)
+		if (list[i]->isTarget)
 		{
-			targetY += (10 * dt);
-			if (targetY > 5)
-				targetY = 5;
-			//list[i]->SetPosition(Vector3(list[i]->GetPosition().x, targetY, list[i]->GetPosition().z));
-			
-			//aRotateMtx->rotateUp = true;
+			if (EntityManager::GetInstance()->CheckerTarget == true)
+			{
+				targetY += (10 * dt);
+				if (targetY > 5)
+					targetY = 5;
+				list[i]->SetPosition(Vector3(list[i]->GetPosition().x, targetY, list[i]->GetPosition().z));
+			}
 		}
-		
-		//cout << "Target found!" << endl;
-		//CSceneGraph::GetInstance()->DeleteNode(list[i]);
-
-
 	}
 }
 
@@ -343,11 +435,13 @@ void SceneText::Update(double dt)
 
 	if (KeyboardController::GetInstance()->IsKeyDown('8'))
 	{
-		aRotateMtx->rotateUp = true;
+		scoop = 5;
+		isScoop = true;
 	}
 	else if (KeyboardController::GetInstance()->IsKeyDown('9'))
 	{
-		aRotateMtx->rotateDown = true;
+		scoop = 45;
+		isScoop = false;
 	}
 
 	if(KeyboardController::GetInstance()->IsKeyDown('I'))
@@ -438,6 +532,49 @@ void SceneText::Update(double dt)
     ss.precision(4);
     ss << "Time: " << timer->countdown;
     textObj[3]->SetText(ss.str());
+
+	if (EntityManager::GetInstance()->CheckerHead ==true)
+	{
+		if (isScoop)
+			Head->InitLOD("Head", "Head", "Head");
+		else
+			Head->InitLOD("sphere", "sphere", "sphere");
+	}
+	if (EntityManager::GetInstance()->CheckerBody == true)
+	{
+		if (isScoop)
+			Body->InitLOD("Body", "Body", "Body");
+		else
+			Body->InitLOD("sphere", "sphere", "sphere");
+	}
+	if (EntityManager::GetInstance()->CheckerRightArm == true)
+	{
+		if (isScoop)
+			RightArm->InitLOD("RightArm", "RightArm", "RightArm");
+		else
+			RightArm->InitLOD("sphere", "sphere", "sphere");
+	}
+	if (EntityManager::GetInstance()->CheckerLeftArm == true)
+	{
+		if (isScoop)
+			LeftArm->InitLOD("LeftArm", "LeftArm", "v");
+		else
+			LeftArm->InitLOD("sphere", "sphere", "sphere");
+	}
+	if (EntityManager::GetInstance()->CheckerRightleg == true)
+	{
+		if (isScoop)
+			Rightleg->InitLOD("RightLeg", "RightLeg", "RightLeg");
+		else
+			Rightleg->InitLOD("sphere", "sphere", "sphere");
+	}
+	if (EntityManager::GetInstance()->CheckerLeftleg == true)
+	{
+		if (isScoop)
+			Leftleg->InitLOD("LeftLeg", "LeftLeg", "LeftLeg");
+		else
+			Leftleg->InitLOD("sphere", "sphere", "sphere");
+	}
 }
 
 void SceneText::Render()
@@ -447,7 +584,7 @@ void SceneText::Render()
 	GraphicsManager::GetInstance()->UpdateLightUniforms();
 
 	// Setup 3D pipeline then render 3D
-	GraphicsManager::GetInstance()->SetPerspectiveProjection(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
+	GraphicsManager::GetInstance()->SetPerspectiveProjection(scoop, 4.0f / 3.0f, 0.1f, 10000.0f);
 	GraphicsManager::GetInstance()->AttachCamera(&camera);
 	EntityManager::GetInstance()->Render();
 	// Setup 2D pipeline then render 2D

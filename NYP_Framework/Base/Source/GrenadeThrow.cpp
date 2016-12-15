@@ -5,7 +5,8 @@ CGrenadeThrow::CGrenadeThrow()
 }
 CGrenadeThrow::~CGrenadeThrow()
 {
-}// Initialise this instance to default values
+}
+// Initialise this instance to default values
 void CGrenadeThrow::Init(void)
 {
 	// Call the parent's Init method
