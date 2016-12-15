@@ -166,6 +166,10 @@ void SceneText::Init()
     MeshBuilder::GetInstance()->GetMesh("target")->textureID = LoadTGA("Image//Misc//target.tga");
     MeshBuilder::GetInstance()->GenerateQuad("machine gun", Color(1, 1, 1), 1.f);
     MeshBuilder::GetInstance()->GetMesh("machine gun")->textureID = LoadTGA("Image//Weapons//M4A1.tga");
+    MeshBuilder::GetInstance()->GenerateQuad("laser gun", Color(1, 1, 1), 1.f);
+    MeshBuilder::GetInstance()->GetMesh("laser gun")->textureID = LoadTGA("Image//Weapons//lasergun.tga");
+    MeshBuilder::GetInstance()->GenerateQuad("sniper rifle", Color(1, 1, 1), 1.f);
+    MeshBuilder::GetInstance()->GetMesh("sniper rifle")->textureID = LoadTGA("Image//Weapons//sniper.tga");
     MeshBuilder::GetInstance()->GenerateCube("wall", Color(0.75f, 0.75f, 0.75f), 1.0f);
     MeshBuilder::GetInstance()->GetMesh("wall")->textureID = LoadTGA("Image//Objects//Cinderblock.tga");
     MeshBuilder::GetInstance()->GenerateOBJ("wallobj", "OBJ//wall.obj");
@@ -320,7 +324,7 @@ void SceneText::Init()
     {
         textUI[i] = Create::Text2DObject("text", Vector3(-halfWindowWidth, -halfWindowHeight + fontSize*i + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(0.5f, 0.5f, 0.5f));
     }
-    mcsprite = nullptr; pisprite = nullptr;
+    mcsprite = nullptr; pisprite = nullptr; sisprite = nullptr;
 }
 
 void SceneText::TargetUpdate(double dt)
@@ -450,9 +454,20 @@ void SceneText::Update(double dt)
             mcsprite = nullptr;
             delete mcsprite;
         }
+        if (playerInfo->GetWeaponType() == playerInfo->SNIPERRIFLE)
+        {
+            sisprite = Create::Sprite2DObject("sniper rifle", Vector3(100.0f, -130.0f, 1.0f), Vector3(1024.0f, 450.0f, 300.0f));
+            prevWeapon = playerInfo->GetWeaponType();
+        }
+        else if (sisprite != nullptr && !sisprite->IsDone())
+        {
+            sisprite->SetIsDone(true);
+            sisprite = nullptr;
+            delete sisprite;
+        }
         if (playerInfo->GetWeaponType() == playerInfo->PISTOL)
         {
-            pisprite = Create::Sprite2DObject("crosshair", Vector3(100.0f, -130.0f, -2.0f), Vector3(1024.0f, 450.0f, 300.0f));
+            pisprite = Create::Sprite2DObject("laser gun", Vector3(100.0f, -130.0f, -2.0f), Vector3(1200.0f, 600.0f, 300.0f));
             prevWeapon = playerInfo->GetWeaponType();
         }
         else if (pisprite != nullptr && !pisprite->IsDone())
@@ -498,11 +513,28 @@ void SceneText::Update(double dt)
     int windowWidth = Application::GetInstance().GetWindowWidth();
     int windowHeight = Application::GetInstance().GetWindowHeight();
 
-    ss.str("");
-    ss.precision(4);
-    ss << playerInfo->GetPrimaryWeapon().GetMagRound() << " / " << playerInfo->GetPrimaryWeapon().GetTotalRound();
-    textUI[0]->SetPosition(Vector3(windowWidth * 0.25f, -285, 0));
-    textUI[0]->SetText(ss.str());
+    if (playerInfo->GetWeaponType() == playerInfo->MACHINEGUN || playerInfo->SNIPERRIFLE)
+    {
+        ss.str("");
+        ss.precision(4);
+        ss << playerInfo->GetPrimaryWeapon().GetMagRound() << " / " << playerInfo->GetPrimaryWeapon().GetTotalRound();
+        textUI[0]->SetPosition(Vector3(windowWidth * 0.25f, -285, 1.1f));
+        textUI[0]->SetText(ss.str());
+    }
+    else if (playerInfo->GetWeaponType() == playerInfo->PISTOL)
+    {
+        ss.str("");
+        ss.precision(4);
+        ss << playerInfo->GetSecondaryWeapon().GetMagRound() << " / " << playerInfo->GetSecondaryWeapon().GetTotalRound();
+        textUI[0]->SetPosition(Vector3(windowWidth * 0.25f, -285, 1.1f));
+        textUI[0]->SetText(ss.str());
+    }
+        ss.str("");
+        ss.precision(4);
+        ss << playerInfo->GetTertiaryWeapon().GetMagRound() << " / " << playerInfo->GetTertiaryWeapon().GetTotalRound();
+        textUI[1]->SetPosition(Vector3(windowWidth * 0.325f, 250, 0));
+        textUI[1]->SetColor(Color(0, 0, 1.f));
+        textUI[1]->SetText(ss.str());
 }
 
 void SceneText::Render()

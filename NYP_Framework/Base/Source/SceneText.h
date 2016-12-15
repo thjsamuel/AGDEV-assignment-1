@@ -58,6 +58,7 @@ private:
 	float targetY;
     SpriteEntity* mcsprite;
     SpriteEntity* pisprite;
+    SpriteEntity* sisprite;
     CPlayerInfo::WEAPONS prevWeapon;
 
 	static SceneText* sInstance; // The pointer to the object that gets registered

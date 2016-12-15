@@ -3,7 +3,7 @@
 CSniper::CSniper()
 {
 	weight = 6.5;
-	muzzleSpeed = 20000;
+	muzzleSpeed = 100;
 }
 
 

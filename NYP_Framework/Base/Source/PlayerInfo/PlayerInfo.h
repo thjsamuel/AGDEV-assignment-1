@@ -103,6 +103,8 @@ public:
 	GroundEntity* GetTerrain(void);
     WEAPONS GetWeaponType(void);
     const CWeaponInfo GetPrimaryWeapon(void);
+    const CWeaponInfo GetSecondaryWeapon(void);
+    const CWeaponInfo GetTertiaryWeapon(void);
 
 	// Update Jump Upwards
 	void UpdateJumpUpwards(double dt = 0.0333f);

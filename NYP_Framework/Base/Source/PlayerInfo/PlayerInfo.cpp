@@ -80,7 +80,7 @@ void CPlayerInfo::Init(void)
     activeWeapon = MACHINEGUN;
 	primaryWeapon->Init();
 
-	secondaryWeapon = new CPistol();
+	secondaryWeapon = new CLaserBlaster();
 	secondaryWeapon->Init();
 
     tertiaryWeapon = new CGrenadeThrow();
@@ -282,6 +282,16 @@ const CWeaponInfo CPlayerInfo::GetPrimaryWeapon(void)
     return *primaryWeapon;
 }
 
+const CWeaponInfo CPlayerInfo::GetSecondaryWeapon(void)
+{
+    return *secondaryWeapon;
+}
+
+const CWeaponInfo CPlayerInfo::GetTertiaryWeapon(void)
+{
+    return *tertiaryWeapon;
+}
+
 // Update Jump Upwards
 void CPlayerInfo::UpdateJumpUpwards(double dt)
 {
@@ -481,28 +491,39 @@ void CPlayerInfo::Update(double dt)
 
     if (KeyboardController::GetInstance()->IsKeyPressed(0x31) && activeWeapon != MACHINEGUN)
     {
-        //if (primaryWeapon)
-        //{
-        //    delete primaryWeapon;
-        //    primaryWeapon = NULL;
-        //}
-        //primaryWeapon = new CGrenadeThrow();
+        if (primaryWeapon)
+        {
+            delete primaryWeapon;
+            primaryWeapon = NULL;
+        }
+        primaryWeapon = new CMachineGun();
         activeWeapon = MACHINEGUN;
-        //primaryWeapon->Init();
+        primaryWeapon->Init();
     }
-    else if (KeyboardController::GetInstance()->IsKeyPressed(0x32) && activeWeapon != PISTOL)
+    else if (KeyboardController::GetInstance()->IsKeyPressed(0x32) && activeWeapon != SNIPERRIFLE)
+    {
+        if (primaryWeapon)
+        {
+            delete primaryWeapon;
+            primaryWeapon = NULL;
+        }
+        primaryWeapon = new CSniper();
+        activeWeapon = SNIPERRIFLE;
+        primaryWeapon->Init();
+    }
+    else if (KeyboardController::GetInstance()->IsKeyPressed(0x33) && activeWeapon != PISTOL)
     {
         activeWeapon = PISTOL;
     }
 	// Update the weapons
 	if (KeyboardController::GetInstance()->IsKeyReleased('R'))
 	{
-		if (primaryWeapon && activeWeapon == MACHINEGUN)
+        if (primaryWeapon && (activeWeapon == MACHINEGUN || activeWeapon == SNIPERRIFLE))
 		{
 			primaryWeapon->Reload();
 			//primaryWeapon->PrintSelf();
 		}
-        if (secondaryWeapon&& activeWeapon == PISTOL)
+        if (secondaryWeapon && activeWeapon == PISTOL)
 		{
 			secondaryWeapon->Reload();
 			//primaryWeapon->PrintSelf();
@@ -539,11 +560,14 @@ void CPlayerInfo::Update(double dt)
                 primaryWeapon->SetElapsed(0.0);
             primaryWeapon->Discharge(position, target, this);
         }
+	}
+    if (MouseController::GetInstance()->IsButtonPressed(MouseController::LMB))
+    {
         if (secondaryWeapon && activeWeapon == PISTOL)
         {
             secondaryWeapon->Discharge(position, target, this);
         }
-	}
+    }
 	else if (MouseController::GetInstance()->IsButtonPressed(MouseController::RMB))
 	{
         if (tertiaryWeapon)
