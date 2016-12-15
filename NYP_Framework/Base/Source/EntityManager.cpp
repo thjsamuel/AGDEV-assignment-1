@@ -51,6 +51,7 @@ void EntityManager::Render()
 	end = entityList.end();
 	for (it = entityList.begin(); it != end; ++it)
 	{
+//if ((*it)->isTarget == false)
         if ((*it)->IsDone() == false)
 		    (*it)->Render();
 	}

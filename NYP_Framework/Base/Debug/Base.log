@@ -1,6 +1,0 @@
-﻿  SceneText.cpp
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\scenetext.cpp(360): warning C4244: 'argument' : conversion from 'double' to 'const float', possible loss of data
-e:\blackboardlocal\year 2\sem2\advanced game development techniques\assignment 1\nyp_framework\base\source\scenetext.cpp(364): warning C4018: '<' : signed/unsigned mismatch
-Application.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  Base.vcxproj -> E:\BlackboardLocal\Year 2\Sem2\Advanced Game Development Techniques\Assignment 1\NYP_Framework\Debug\Base.exe

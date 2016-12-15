@@ -1,46 +1,66 @@
 #include "Transform.h"
 #include <iostream>
-
 using namespace std;
-
 // Default Constructor
-CTransform::CTransform(void) : theUpdatedTransform(NULL)
+CTransform::CTransform(void)
+	: theUpdateTransformation(NULL)
 {
 	Mtx.SetToIdentity();
 	DefaultMtx.SetToIdentity();
 }
-
+// Overloaded Constructor
 CTransform::CTransform(const float dx, const float dy, const float dz)
 {
 	Mtx.SetToTranslation(dx, dy, dz);
 }
-
+// Destructor
 CTransform::~CTransform(void)
 {
-
+	if (theUpdateTransformation)
+	{
+		delete theUpdateTransformation;
+		theUpdateTransformation = NULL;
+	}
 }
 
+void CTransform::SetUpdateTransformation(CUpdateTransformation* theUpdateTransformation)
+{
+	this->theUpdateTransformation = theUpdateTransformation;
+}
+
+Mtx44 CTransform::GetUpdateTransform(void)
+{
+	if (theUpdateTransformation == NULL)
+		return DefaultMtx;
+
+	theUpdateTransformation->Update();
+
+	return theUpdateTransformation->GetUpdateTransformation();
+}
+
+// Apply a translation to the Transformation Matrix
 void CTransform::ApplyTranslate(const float dx, const float dy, const float dz)
 {
 	Mtx44 TempMtx;
 	TempMtx.SetToTranslation(dx, dy, dz);
-	Mtx = Mtx * TempMtx;
+	Mtx = Mtx*TempMtx;
 }
-
+// Get the translation from the Transformation Matrix
 void CTransform::GetTranslate(float& x, float& y, float& z)
 {
 	x = Mtx.a[12];
 	y = Mtx.a[13];
-	z = Mtx.a[14]; // 12, 13, 14, last three numbers to repre translation, 15 is 1
+	z = Mtx.a[14];
 }
-
-void CTransform::ApplyRotate(const float angle, const float rx, const float ry, const float rz)
+// Apply a rotation to the Transformation Matrix
+void CTransform::ApplyRotate(const float angle, const float rx, const float ry, const
+	float rz)
 {
 	Mtx44 TempMtx;
 	TempMtx.SetToRotation(angle, rx, ry, rz);
-	Mtx = Mtx * TempMtx;
+	Mtx = Mtx*TempMtx;
 }
-
+// Get the rotation from the Transformation Matrix
 float CTransform::GetRotate(const AXIS theAxis)
 {
 	if (theAxis == X_AXIS)
@@ -66,9 +86,8 @@ float CTransform::GetRotate(const AXIS theAxis)
 	}
 	return 0.0f;
 }
-
 // Set the scale of the Transformation Matrix
-void CTransform::SetScale(const float sx, const float sy, const float sz)
+void CTransform::SetScaleT(const float sx, const float sy, const float sz)
 {
 	float scaleX = sx, scaleY = sy, scaleZ = sz;
 	if (scaleX == 0.0f)
@@ -79,7 +98,6 @@ void CTransform::SetScale(const float sx, const float sy, const float sz)
 		scaleZ = 1.0f;
 	Mtx.SetToScale(scaleX, scaleY, scaleZ);
 }
-
 // Get the scale from the Transformation Matrix
 void CTransform::GetScale(float& x, float& y, float& z)
 {
@@ -87,24 +105,22 @@ void CTransform::GetScale(float& x, float& y, float& z)
 	y = Mtx.a[5];
 	z = Mtx.a[10];
 }
-
 // Apply a Transformation Matrix to the Transformation Matrix here
 void CTransform::ApplyTransform(Mtx44 newMTX)
 {
 	Mtx = Mtx * newMTX;
 }
-
 // Reset the transformation matrix to identity matrix
 void CTransform::Reset(void)
 {
 	Mtx.SetToIdentity();
 }
-
 // Get the transformation matrix
 Mtx44 CTransform::GetTransform(void)
 {
 	return Mtx;
-}// Print Self
+}
+// Print Self
 void CTransform::PrintSelf(void) const
 {
 	cout << "======================================================================"

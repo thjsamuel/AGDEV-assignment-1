@@ -15,7 +15,10 @@ GenericEntity::~GenericEntity()
 
 void GenericEntity::Update(double _dt)
 {
-	// Does nothing here, can inherit & override or create your own version of this class :D
+	if (theUpdateTransformation)
+	{
+		ApplyTransform(GetUpdateTransform());
+	}
 }
 
 void GenericEntity::Render()
@@ -23,6 +26,7 @@ void GenericEntity::Render()
 	MS& modelStack = GraphicsManager::GetInstance()->GetModelStack();
 	modelStack.PushMatrix();
 	modelStack.Translate(position.x, position.y, position.z);
+	modelStack.MultMatrix(this->GetTransform());
 	modelStack.Scale(scale.x, scale.y, scale.z);
 	if (GetLODStatus() == true)
 	{

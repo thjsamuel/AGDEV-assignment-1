@@ -22,6 +22,7 @@
 #include "SkyBox/SkyBoxEntity.h"
 #include "SceneGraph.h"
 
+
 #include <iostream>
 using namespace std;
 
@@ -169,7 +170,7 @@ void SceneText::Init()
     MeshBuilder::GetInstance()->GetMesh("wall")->textureID = LoadTGA("Image//Objects//Cinderblock.tga");
     MeshBuilder::GetInstance()->GenerateOBJ("wallobj", "OBJ//wall.obj");
     MeshBuilder::GetInstance()->GetMesh("wallobj")->textureID = LoadTGA("Image//Objects//Cinderblock.tga");
-
+    MeshBuilder::GetInstance()->GenerateCube("targetmedium", Color(1.0f, 0.0f, 0.0f), 4.0f);
 	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
 	CSpatialPartition::GetInstance()->SetCamera(&camera);
@@ -199,13 +200,41 @@ void SceneText::Init()
 		cout << "EntityManager::AddEntity: Unable to add to scene graph!" << endl;
 	}
 
-    //vector<GenericEntity*> target
-    target = Create::Entity("target", Vector3(-25.f, 0.0f, -120.0f));
+	targetY = -15.f;
+    target = Create::Entity("target", Vector3(20.f, targetY, -80.0f));
     target->SetCollider(true);
-    target->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-    target->InitLOD("target", "target", "cubeSG");
+    target->SetAABB(Vector3(5.0f, 5.0f, 5.0f), Vector3(-5.0f, -5.0f, -5.0f));
+    target->InitLOD("target", "sphere", "targetmedium");
     target->isTarget = true;
-    CSceneNode* targetInGrid = CSceneGraph::GetInstance()->GetInstance()->AddNode(target);
+	target->SetScale(Vector3(10, 10, 10));
+ //   CSceneNode* targetInGrid = CSceneGraph::GetInstance()->AddNode(target);
+	//target->ApplyTranslate(0.0f, 0.0f, 0.f);
+
+	//aRotateMtx = new CUpdateTransformation();
+	//aRotateMtx->ApplyUpdate(1.0f, 1.0f, 0.0f, 0.0f);
+	//aRotateMtx->SetSteps(-90, 10);
+	//target->SetUpdateTransformation(aRotateMtx);
+	//aRotateMtx->rotateDown = true;
+	
+	
+
+	//GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
+
+	//GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* childNode = baseNode->AddChild(childCube);
+	//childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
+
+	//GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
+	//grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
+
+	//CUpdateTransformation* bRotateMtx = new CUpdateTransformation();
+	//bRotateMtx->ApplyUpdate(1.0f, 0.0f, 1.0f, 0.0f);
+	//bRotateMtx->SetSteps(-120, 60);
+	//grandchildNode->SetUpdateTransformation(bRotateMtx);
+
+    //CSceneNode* targetInGrid = CSceneGraph::GetInstance()->GetInstance()->AddNode(target);
 
     timeBoard = Create::Entity("cubeSG", Vector3(50.f, 0.0f, -250.0f), Vector3(15, 5, 5));
     timeBoard->isText = true;
@@ -253,8 +282,8 @@ void SceneText::Init()
         collidableWalls.push_back(blockade);
     }
 
-    float joinX = collidableWalls[0]->GetPosition().x - collidableWalls[0]->GetScale().x * 0.5f;
-    float joinZ = collidableWalls[0]->GetPosition().z - collidableWalls[0]->GetScale().z * 0.5f;
+    float joinX = collidableWalls[0]->GetPosition().x - collidableWalls[0]->GetScaleE().x * 0.5f;
+    float joinZ = collidableWalls[0]->GetPosition().z - collidableWalls[0]->GetScaleE().z * 0.5f;
     collidableWalls[0]->SetPosition(Vector3(0, -8.5, 200));
     collidableWalls[1]->SetScale(Vector3(5.f, 15.0f, 400.0f));
     collidableWalls[1]->SetPosition(Vector3(joinX, -8.5f, 0));
@@ -265,7 +294,7 @@ void SceneText::Init()
     for (int i = 0; i < num_walls; ++i)
     {
         Vector3 objPos = collidableWalls[i]->GetPosition();
-        Vector3 objSca = collidableWalls[i]->GetScale();
+        Vector3 objSca = collidableWalls[i]->GetScaleE();
         playerInfo->CollideFront(objPos, objSca);
     }
 
@@ -292,6 +321,29 @@ void SceneText::Init()
         textUI[i] = Create::Text2DObject("text", Vector3(-halfWindowWidth, -halfWindowHeight + fontSize*i + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(0.5f, 0.5f, 0.5f));
     }
     mcsprite = nullptr; pisprite = nullptr;
+}
+
+void SceneText::TargetUpdate(double dt)
+{
+	// to add to child, just replaace playerinfo with target.pos
+	vector<EntityBase*> list = CSpatialPartition::GetInstance()->GetObjects(playerInfo->GetPos(), 1.0f);
+	for (int i = 0; i < list.size(); ++i)
+	{
+		//if (/*list.size() > 1&&*/ list[i]->isTarget)
+		{
+			targetY += (10 * dt);
+			if (targetY > 5)
+				targetY = 5;
+			//list[i]->SetPosition(Vector3(list[i]->GetPosition().x, targetY, list[i]->GetPosition().z));
+			
+			//aRotateMtx->rotateUp = true;
+		}
+		
+		//cout << "Target found!" << endl;
+		//CSceneGraph::GetInstance()->DeleteNode(list[i]);
+
+
+	}
 }
 
 void SceneText::Update(double dt)
@@ -321,6 +373,15 @@ void SceneText::Update(double dt)
 		lights[0]->type = Light::LIGHT_SPOT;
 	}
 
+	if (KeyboardController::GetInstance()->IsKeyDown('8'))
+	{
+		aRotateMtx->rotateUp = true;
+	}
+	else if (KeyboardController::GetInstance()->IsKeyDown('9'))
+	{
+		aRotateMtx->rotateDown = true;
+	}
+
 	if(KeyboardController::GetInstance()->IsKeyDown('I'))
 		lights[0]->position.z -= (float)(10.f * dt);
 	if(KeyboardController::GetInstance()->IsKeyDown('K'))
@@ -333,6 +394,7 @@ void SceneText::Update(double dt)
 		lights[0]->position.y -= (float)(10.f * dt);
 	if(KeyboardController::GetInstance()->IsKeyDown('P'))
 		lights[0]->position.y += (float)(10.f * dt);
+
 
 	// if the left mouse button was released
 	//if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
@@ -363,9 +425,9 @@ void SceneText::Update(double dt)
     vector<EntityBase*> list = CSpatialPartition::GetInstance()->GetObjects(playerInfo->GetPos(), 1.0f);
     for (int i = 0; i < list.size(); ++i)
     {
-        if (list[i]->isTarget)
-            CSceneGraph::GetInstance()->DeleteNode(list[i]);
-        else if (list[i]->isText)
+        //if (list[i]->isTarget)
+          //  CSceneGraph::GetInstance()->DeleteNode(list[i]);
+        if (list[i]->isText)
         {
             //Timer* tempTimer = dynamic_cast<Timer*>(list[i]);
             timer->run = false;
@@ -374,6 +436,7 @@ void SceneText::Update(double dt)
 
 	// Update the player position and other details based on keyboard and mouse inputs
 	playerInfo->Update(dt);
+	TargetUpdate(dt);
     if (prevWeapon != playerInfo->GetWeaponType())
     {
         if (playerInfo->GetWeaponType() == playerInfo->MACHINEGUN)
@@ -416,6 +479,16 @@ void SceneText::Update(double dt)
 	//ss1.precision(4);
 	//ss1 << "Player:" << playerInfo->GetPos();
 	//textObj[2]->SetText(ss1.str());
+
+	/*if (target->TargetActivated == false)
+		target->SetUpdateTransformation(aRotateMtx);
+
+	if (aRotateMtx->curSteps >= 0)
+		target->TargetActivated = true;*/
+	//aRotateMtx->Update();
+	
+
+	//cout << aRotateMtx->curSteps << endl;
 
     ss.str("");
     ss.precision(4);

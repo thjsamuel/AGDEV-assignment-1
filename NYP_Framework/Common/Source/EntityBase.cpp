@@ -8,6 +8,7 @@ EntityBase::EntityBase()
 	, bLaser(false)
     , bCube(false)
     , isTarget(false)
+	, TargetActivated(false)
     , isText(false)
     , isWall(false)
 {

@@ -10,6 +10,9 @@
 #include "MatrixStack.h"
 #include "GenericEntity.h"
 #include "Enemy.h"
+#include "UpdateTransform.h"
+
+
 #include "Timer\Timer.h"
 #include <vector>
 #include "SpriteEntity.h"
@@ -30,6 +33,8 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
+	void TargetUpdate(double dt);
+
 private:
 	SceneText(SceneManager* _sceneMgr); // This is used to register to SceneManager
 
@@ -42,12 +47,15 @@ private:
 
 	Light* lights[2];
 
-    GenericEntity* target;
+	//vector<GenericEntity*> target;
+	GenericEntity* target;
     GenericEntity* timeBoard;
     vector<GenericEntity*> collidableWalls;
     int num_walls;
     Timer* timer;
     CEnemy* theEnemy;
+	CUpdateTransformation* aRotateMtx;
+	float targetY;
     SpriteEntity* mcsprite;
     SpriteEntity* pisprite;
     CPlayerInfo::WEAPONS prevWeapon;
