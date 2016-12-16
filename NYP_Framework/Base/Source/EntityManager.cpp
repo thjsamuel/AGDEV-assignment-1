@@ -19,7 +19,7 @@ void EntityManager::Update(double _dt)
 	}
 
 	CSceneGraph::GetInstance()->Update();
-
+	
 	if (theSpatialPartition)
 		theSpatialPartition->Update();
 
@@ -32,8 +32,26 @@ void EntityManager::Update(double _dt)
 		if ((*it)->IsDone())
 		{
 			// Delete if done
+			GenericEntity* genericTemp = dynamic_cast<GenericEntity*>((*it));
+
+			if (genericTemp != nullptr && (genericTemp->GetMesh()->name == "Head" || genericTemp->GetMesh()->name == "Headsphere"))
+				CheckerHead = false;
+			else if (genericTemp != nullptr && (genericTemp->GetMesh()->name == "Body" || genericTemp->GetMesh()->name == "Bodysphere") )
+				CheckerBody = false;
+			else if (genericTemp != nullptr && (genericTemp->GetMesh()->name == "RightArm" || genericTemp->GetMesh()->name == "RightArmsphere"))
+				CheckerRightArm = false;
+			else if (genericTemp != nullptr && (genericTemp->GetMesh()->name == "LeftArm" || genericTemp->GetMesh()->name == "LeftArmsphere"))
+				CheckerLeftArm = false;
+			else if (genericTemp != nullptr && (genericTemp->GetMesh()->name == "RightLeg" ||  genericTemp->GetMesh()->name == "RightLegsphere"))
+				CheckerRightleg = false;
+			else if (genericTemp != nullptr && (genericTemp->GetMesh()->name == "LeftLeg" ||  genericTemp->GetMesh()->name == "LeftLegsphere"))
+				CheckerLeftleg = false;
+			else if (genericTemp != nullptr && genericTemp->GetMesh()->name == "target")
+				CheckerTarget = false;
+			
 			delete *it;
 			it = entityList.erase(it);
+			//(*it)->SetIsDone(false);
 		}
 		else
 		{
@@ -127,6 +145,13 @@ void EntityManager::SetSpatialPartition(CSpatialPartition* theSpatialPartition)
 // Constructor
 EntityManager::EntityManager()
 {
+	CheckerHead = true;
+	CheckerBody = true;
+	CheckerRightArm = true;
+	CheckerLeftArm = true;
+	CheckerRightleg = true;
+	CheckerLeftleg = true;
+	CheckerTarget = true;
 }
 
 // Destructor
@@ -327,7 +352,7 @@ bool EntityManager::CheckForCollision(void)
                 }
             }
 		}
-        else if ((*colliderThis)->HasCollider() && (*colliderThis)->isWall == false)
+        else if ((*colliderThis)->HasCollider())
 		{
 			// This object was derived from a CCollider class, then it will have Collision Detection methods
 			//CCollider *thisCollider = dynamic_cast<CCollider*>(*colliderThis);
@@ -345,10 +370,14 @@ bool EntityManager::CheckForCollision(void)
 				{
 					// This object was derived from a CCollider class, then it will have Collision Detection methods
 					EntityBase *thatEntity = dynamic_cast<EntityBase*>(*colliderThat);
-					if (CheckSphereCollision(thisEntity, thatEntity) == true)
-					{
-						if (CheckAABBCollision(thisEntity, thatEntity) == true)
-						{
+                    if (thisEntity->isTarget && thatEntity->isTarget)
+                        continue;
+                    if (!(thisEntity->isWall || thatEntity->isWall))
+                    {
+                        if (CheckSphereCollision(thisEntity, thatEntity) == true)
+                        {
+                            if (CheckAABBCollision(thisEntity, thatEntity) == true)
+                            {
                                 thisEntity->SetIsDone(true);
                                 thatEntity->SetIsDone(true);
 
@@ -356,26 +385,37 @@ bool EntityManager::CheckForCollision(void)
                                     cout << "*** This Entity removed ***" << endl;
                                 if (CSceneGraph::GetInstance()->DeleteNode((*colliderThat)) == true)
                                     cout << "*** That Entity removed ***" << endl;
-						}
-                        else
-                        {
-                            CProjectile* thatEntity = dynamic_cast<CProjectile*>(*colliderThat);
-                            if (thatEntity == NULL)
-                                continue;
-                            Vector3 hitPosition = Vector3(0, 0, 0);
-                            CCollider *thisCollider = dynamic_cast<CCollider*>(*colliderThis);
-                            Vector3 thisMinAABB = (*colliderThis)->GetPosition() + thisCollider->GetMinAABB();
-                            Vector3 thisMaxAABB = (*colliderThis)->GetPosition() + thisCollider->GetMaxAABB();
-                            if (CheckLineSegmentPlane(thatEntity->GetPosition(), thatEntity->GetPosition() - thatEntity->GetDirection() * 10, thisMinAABB, thisMaxAABB, hitPosition) == true)
+                            }
+                            else
                             {
-                                (*colliderThis)->SetIsDone(true);
-                                (*colliderThat)->SetIsDone(true);
+                                CProjectile* thatEntity = dynamic_cast<CProjectile*>(*colliderThat);
+                                if (thatEntity == NULL)
+                                    continue;
+                                Vector3 hitPosition = Vector3(0, 0, 0);
+                                CCollider *thisCollider = dynamic_cast<CCollider*>(*colliderThis);
+                                Vector3 thisMinAABB = (*colliderThis)->GetPosition() + thisCollider->GetMinAABB();
+                                Vector3 thisMaxAABB = (*colliderThis)->GetPosition() + thisCollider->GetMaxAABB();
+                                if (CheckLineSegmentPlane(thatEntity->GetPosition(), thatEntity->GetPosition() - thatEntity->GetDirection() * 10, thisMinAABB, thisMaxAABB, hitPosition) == true)
+                                {
+                                    (*colliderThis)->SetIsDone(true);
+                                    (*colliderThat)->SetIsDone(true);
 
-                                CSceneGraph::GetInstance()->DeleteNode((*colliderThis));
-                                CSceneGraph::GetInstance()->DeleteNode((*colliderThat));
+                                    CSceneGraph::GetInstance()->DeleteNode((*colliderThis));
+                                    CSceneGraph::GetInstance()->DeleteNode((*colliderThat));
+                                }
                             }
                         }
-					}
+                    }
+                    //else if ((thisEntity->isWall && thatEntity->isWall) == false)
+                    //{
+                    //        if (CheckAABBCollision(thisEntity, thatEntity) == true)
+                    //        {
+                    //            if (thisEntity->isWall)
+                    //                (*colliderThat)->SetIsDone(true);
+                    //            else if(thatEntity->isWall)
+                    //                (*colliderThis)->SetIsDone(true);
+                    //        }
+                    //}
 				}
 			}
 		}

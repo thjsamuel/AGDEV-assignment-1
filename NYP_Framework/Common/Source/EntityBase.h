@@ -14,6 +14,9 @@ public:
 	virtual void RenderUI();
 
 	inline void SetPosition(const Vector3& _value){ position = _value; };
+    void SetPositionX(const float x){ position.x = x; };
+    void SetPositionY(const float y){ position.y = y; };
+    void SetPositionZ(const float z){ position.z = z; };
 	inline Vector3 GetPosition(){ return position; };
 
 	inline void SetScale(const Vector3& _value){ scale = _value; };

@@ -11,7 +11,7 @@
 #include "GenericEntity.h"
 #include "Enemy.h"
 #include "UpdateTransform.h"
-
+#include "Enemy\Target.h"
 
 #include "Timer\Timer.h"
 #include <vector>
@@ -51,11 +51,27 @@ private:
 	GenericEntity* target;
     GenericEntity* timeBoard;
     vector<GenericEntity*> collidableWalls;
+    vector<Target> targets;
+    vector<Target> targetsSide;
+    vector<Target> targetTrigger;
+    bool canAppear;
+    vector<EntityBase*> userSpace;
     int num_walls;
+    int num_targets;
     Timer* timer;
     CEnemy* theEnemy;
 	CUpdateTransformation* aRotateMtx;
 	float targetY;
+	float scoop;
+	bool isScoop;
+
+	GenericEntity* Head;
+	GenericEntity* Body;
+	GenericEntity* RightArm;
+	GenericEntity* LeftArm;
+	GenericEntity* Rightleg;
+	GenericEntity* Leftleg;
+
     SpriteEntity* mcsprite;
     SpriteEntity* pisprite;
     SpriteEntity* sisprite;

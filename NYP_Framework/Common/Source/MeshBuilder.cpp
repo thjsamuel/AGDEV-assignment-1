@@ -199,33 +199,33 @@ Then generate the VBO/IBO and store them in Mesh object
 \return Pointer to mesh storing VBO/IBO of cube
 */
 /******************************************************************************/
-Mesh* MeshBuilder::GenerateCube(const std::string &meshName, Color color, float length)
+Mesh* MeshBuilder::GenerateCube(const std::string &meshName, Color color, float lengthx, float lengthy, float lengthz)
 {
 	Vertex v;
 	std::vector<Vertex> vertex_buffer_data;
 
-	v.pos.Set(-0.5f * length,-0.5f * length,-0.5f * length);
+	v.pos.Set(-0.5f * lengthx, -0.5f * lengthy, -0.5f * lengthz);
 	v.color = color;
 	vertex_buffer_data.push_back(v);
-	v.pos.Set(0.5f * length,-0.5f * length,-0.5f * length);
+	v.pos.Set(0.5f * lengthx, -0.5f * lengthy, -0.5f * lengthz);
 	v.color = color;
 	vertex_buffer_data.push_back(v);
-	v.pos.Set(0.5f * length, 0.5f * length,-0.5f * length);
+	v.pos.Set(0.5f * lengthx, 0.5f * lengthy, -0.5f * lengthz);
 	v.color = color;
 	vertex_buffer_data.push_back(v);
-	v.pos.Set(-0.5f * length, 0.5f * length,-0.5f * length);
+	v.pos.Set(-0.5f * lengthx, 0.5f * lengthy, -0.5f * lengthz);
 	v.color = color;
 	vertex_buffer_data.push_back(v);
-	v.pos.Set(-0.5f * length,-0.5f * length, 0.5f * length);
+	v.pos.Set(-0.5f * lengthx, -0.5f * lengthy, 0.5f * lengthz);
 	v.color = color;
 	vertex_buffer_data.push_back(v);
-	v.pos.Set(0.5f * length,-0.5f * length, 0.5f * length);
+	v.pos.Set(0.5f * lengthx, -0.5f * lengthy, 0.5f * lengthz);
 	v.color = color;
 	vertex_buffer_data.push_back(v);
-	v.pos.Set(0.5f * length, 0.5f * length, 0.5f * length);
+	v.pos.Set(0.5f * lengthx, 0.5f * lengthy, 0.5f * lengthz);
 	v.color = color;
 	vertex_buffer_data.push_back(v);
-	v.pos.Set(-0.5f * length, 0.5f * length, 0.5f * length);
+	v.pos.Set(-0.5f * lengthx, 0.5f * lengthy, 0.5f * lengthz);
 	v.color = color;
 	vertex_buffer_data.push_back(v);
 	

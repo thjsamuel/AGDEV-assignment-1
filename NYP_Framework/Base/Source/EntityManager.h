@@ -21,6 +21,14 @@ public:
 	void SetSpatialPartition(CSpatialPartition* theSpatialPartition);
     //void CollideWithPlayer(CPlayerInfo* player);
     bool isColliding;
+	GenericEntity* nullifier;
+	bool CheckerHead;
+	bool CheckerBody;
+	bool CheckerRightArm;
+	bool CheckerLeftArm;
+	bool CheckerRightleg;
+	bool CheckerLeftleg;
+	bool CheckerTarget;
 private:
 	EntityManager();
 	virtual ~EntityManager();

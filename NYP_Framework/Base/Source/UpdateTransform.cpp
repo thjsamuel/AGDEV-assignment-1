@@ -64,10 +64,8 @@ void CUpdateTransformation::ApplyUpdate(const float dx, const float dy, const fl
 void CUpdateTransformation::ApplyUpdate(const float angle, const float rx, const float
 	ry, const float rz)
 {
-	if (rotateUp==true )
 	Update_Mtx.SetToRotation(angle, rx, ry, rz);
-	if (rotateDown==true)
-	Update_Mtx.SetToRotation(-angle, rx, ry, rz);
+	Update_Mtx_REVERSED.SetToRotation(-angle, rx, ry, rz);
 }
 // Set the minSteps and maxSteps
 void CUpdateTransformation::SetSteps(const int minSteps, const int maxSteps)
